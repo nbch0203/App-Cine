@@ -320,43 +320,60 @@ Comienza con **[PARTE 1: Preparación y Fundamentos](Guia%20paso%20a%20paso/GUIA
 
 ---
 
+## 🔧 Instalación y Configuración (Para clonar el repositorio)
+
+Si quieres usar este proyecto clonándolo desde GitHub, sigue estos pasos:
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/nbch0203/App-de-cine.git
+cd App-de-cine
+```
+
+### 2. Configurar Visual Studio
+1. Abre el archivo de solución `Cine_app.sln` con Visual Studio 2022
+2. Visual Studio restaurará automáticamente los paquetes NuGet necesarios
+
+### 3. Configurar MySQL
+1. Asegúrate de tener MySQL instalado y ejecutándose
+2. Abre MySQL Workbench o tu cliente MySQL favorito
+3. Ejecuta el script de base de datos ubicado en:
+   ```
+   Cine_app/Database/cinema_database_mysql.sql
+   ```
+4. Esto creará la base de datos `cinema_db` con todas las tablas y datos de prueba
+
+### 4. Configurar archivo .env
+1. En la raíz del proyecto, encontrarás un archivo `.env.example`
+2. Copia este archivo y renómbralo a `.env`
+3. Edita el archivo `.env` con tus credenciales de MySQL:
+   ```env
+   DATABASE=server=localhost;port=3306;database=cinema_db;user=root;password=TU_CONTRASEÑA
+   ```
+4. Reemplaza `TU_CONTRASEÑA` con tu contraseña real de MySQL
+
+### 5. Ejecutar la aplicación
+1. En Visual Studio, presiona **F5** o click en el botón ▶️ "Iniciar"
+2. La aplicación debería compilar y ejecutarse correctamente
+
+### ⚠️ Solución de Problemas al Clonar
+
+**Problema: "No se encuentra el archivo .env"**
+- Asegúrate de haber creado el archivo `.env` (sin la extensión .example)
+- Verifica que el archivo esté en la raíz del proyecto
+
+**Problema: "Error de conexión a MySQL"**
+- Verifica que MySQL esté ejecutándose
+- Comprueba que las credenciales en `.env` sean correctas
+- Asegúrate de que la base de datos `cinema_db` exista
+
+**Problema: "Faltan paquetes NuGet"**
+- Click derecho en la solución → "Restaurar paquetes NuGet"
+- O ejecuta en la consola de paquetes:
+  ```
+  Update-Package -reinstall
+  ```
+
+---
+
 ## 🆘 Ayuda y Soporte
-
-### Si tienes problemas:
-
-1. **Revisa los mensajes de error** cuidadosamente
-2. **Verifica MySQL**: ¿Está ejecutándose?
-3. **Revisa el .env**: ¿Contraseña correcta?
-4. **Consulta la Parte 4**: Sección "Solución de Problemas Comunes"
-5. **Google es tu amigo**: Busca el error específico
-
-### Recursos útiles:
-- [Stack Overflow](https://stackoverflow.com/)
-- [Microsoft Learn](https://learn.microsoft.com/es-es/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
-
----
-
-## 📌 Documentación Adicional
-
-Además de esta guía, el proyecto incluye:
-- **[DOCUMENTACION_COMPLETA_PROYECTO.md](Cine_app/Documentacion/DOCUMENTACION_COMPLETA_PROYECTO.md)**: Documentación técnica completa del proyecto final
-
----
-
-## ✨ Créditos
-
-**Proyecto educativo:** Sistema de Reserva de Cine  
-**Tecnologías:** C#, WPF, MySQL  
-**Framework:** .NET 10  
-**Propósito:** Aprendizaje de desarrollo de aplicaciones de escritorio
-
----
-
-## 📄 Licencia
-
-Este proyecto es educativo y de libre para aprendizaje.
-
----
-
-**¡Mucha suerte con tu proyecto! 🎬🍿**
