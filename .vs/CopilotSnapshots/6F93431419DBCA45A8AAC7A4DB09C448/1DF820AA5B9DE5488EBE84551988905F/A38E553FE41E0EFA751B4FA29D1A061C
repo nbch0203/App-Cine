@@ -8,7 +8,7 @@ Esta guía está dividida en **4 partes** para facilitar su lectura y seguimient
 
 ## 📖 Estructura de la Guía
 
-### 📄 [PARTE 1: Preparación y Fundamentos](Guia%20paso%20a%20paso/GUIA_PASO_A_PASO.md)
+### 📄 [PARTE 1: Preparación y Fundamentos](GUIA_PASO_A_PASO_PARA_ESTUDIANTES.md)
 **Duración estimada:** 2-3 horas
 
 **Contenido:**
@@ -34,7 +34,7 @@ Esta guía está dividida en **4 partes** para facilitar su lectura y seguimient
 
 ---
 
-### 📄 [PARTE 2: Ventanas Básicas](Guia%20paso%20a%20paso/GUIA_PASO_A_PASO_PARTE_2.md)
+### 📄 [PARTE 2: Ventanas Básicas](GUIA_PASO_A_PASO_PARTE_2.md)
 **Duración estimada:** 3-4 horas
 
 **Contenido:**
@@ -61,7 +61,7 @@ Esta guía está dividida en **4 partes** para facilitar su lectura y seguimient
 
 ---
 
-### 📄 [PARTE 3: Ventanas Avanzadas](Guia%20paso%20a%20paso/GUIA_PASO_A_PASO_PARTE_3.md)
+### 📄 [PARTE 3: Ventanas Avanzadas](GUIA_PASO_A_PASO_PARTE_3.md)
 **Duración estimada:** 4-5 horas
 
 **Contenido:**
@@ -88,7 +88,7 @@ Esta guía está dividida en **4 partes** para facilitar su lectura y seguimient
 
 ---
 
-### 📄 [PARTE 4: Perfil, Configuración y Pruebas](Guia%20paso%20a%20paso/GUIA_PASO_A_PASO_PARTE_4.md)
+### 📄 [PARTE 4: Perfil, Configuración y Pruebas](GUIA_PASO_A_PASO_PARTE_4.md)
 **Duración estimada:** 2-3 horas
 
 **Contenido:**
@@ -316,7 +316,7 @@ Antes de empezar, asegúrate de tener:
 
 ## 🚀 ¿Listo para Empezar?
 
-Comienza con **[PARTE 1: Preparación y Fundamentos](Guia%20paso%20a%20paso/GUIA_PASO_A_PASO.md)**
+Comienza con **[PARTE 1: Preparación y Fundamentos](GUIA_PASO_A_PASO_PARA_ESTUDIANTES.md)**
 
 ---
 
@@ -340,7 +340,7 @@ Comienza con **[PARTE 1: Preparación y Fundamentos](Guia%20paso%20a%20paso/GUIA
 ## 📌 Documentación Adicional
 
 Además de esta guía, el proyecto incluye:
-- **[DOCUMENTACION_COMPLETA_PROYECTO.md](Cine_app/Documentacion/DOCUMENTACION_COMPLETA_PROYECTO.md)**: Documentación técnica completa del proyecto final
+- **DOCUMENTACION_COMPLETA_PROYECTO.md**: Documentación técnica completa del proyecto final
 
 ---
 
