@@ -8,8 +8,20 @@
         public int Columna { get; set; }
         public string Tipo { get; set; } = "Normal"; // Normal, VIP, Discapacitado
         public bool Activa { get; set; } = true;
+        public decimal PrecioExtra { get; set; } = 0; // Precio adicional según el tipo
 
         public string Identificador => $"{(char)('A' + Fila - 1)}{Columna}";
+
+        // Método para obtener el precio extra según el tipo de butaca
+        public decimal ObtenerPrecioExtra()
+        {
+            return Tipo switch
+            {
+                "VIP" => 3.00m,
+                "Discapacitado" => 0.00m,
+                _ => 0.00m
+            };
+        }
     }
 
     public class Reserva

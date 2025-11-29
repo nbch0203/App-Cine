@@ -1,18 +1,16 @@
 -- ============================================
 -- Script de Base de Datos para Cine_app (MySQL)
--- Base de Datos: Cine_(nombre) (AWS RDS)
+-- Base de Datos: Cine_nixon (AWS RDS)
 -- ============================================
 
 -- Eliminar la base de datos si existe
-DROP DATABASE IF EXISTS Cine_(nombre);
+DROP DATABASE IF EXISTS Cine_nixon;
 
 -- Crear la base de datos
-CREATE DATABASE Cine_(nombre) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-SELECT 'Base de datos Cine_(nombre) creada' AS Mensaje;
+CREATE DATABASE Cine_nixon CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Usar la base de datos
-USE Cine_(nombre);
+USE Cine_nixon;
 
 -- ============================================
 -- Crear Tabla: Usuarios
@@ -142,36 +140,36 @@ SELECT 'Insertando datos de prueba...' AS Mensaje;
 -- Insertar Usuarios de prueba
 -- ============================================
 INSERT INTO Usuarios (Nombre, Apellidos, Email, Password, Telefono, FechaRegistro) VALUES
-('Juan', 'PÈrez GarcÌa', 'juan.perez@email.com', 'password123', '612345678', NOW()),
-('MarÌa', 'LÛpez MartÌnez', 'maria.lopez@email.com', 'password123', '623456789', NOW()),
-('Carlos', 'Gonz·lez Ruiz', 'carlos.gonzalez@email.com', 'password123', '634567890', NOW()),
-('Ana', 'RodrÌguez S·nchez', 'ana.rodriguez@email.com', 'password123', '645678901', NOW());
+('Juan', 'P√©rez Garc√≠a', 'juan.perez@email.com', 'password123', '612345678', NOW()),
+('Mar√≠a', 'L√≥pez Mart√≠nez', 'maria.lopez@email.com', 'password123', '623456789', NOW()),
+('Carlos', 'Gonz√°lez Ruiz', 'carlos.gonzalez@email.com', 'password123', '634567890', NOW()),
+('Ana', 'Rodr√≠guez S√°nchez', 'ana.rodriguez@email.com', 'password123', '645678901', NOW());
 
 SELECT '4 Usuarios insertados' AS Mensaje;
 
 -- ============================================
--- Insertar PelÌculas de prueba
+-- Insertar Pel√≠culas de prueba
 -- ============================================
 INSERT INTO Peliculas (Titulo, Descripcion, Director, Duracion, Genero, FechaEstreno, ImagenUrl, Calificacion, Activa) VALUES
-('Oppenheimer', 'La historia del cientÌfico J. Robert Oppenheimer y su papel en el desarrollo de la bomba atÛmica.', 'Christopher Nolan', 180, 'Drama/HistÛrico', '2023-07-21', 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 8.5, TRUE),
-('Barbie', 'Barbie y Ken est·n teniendo el mejor momento de sus vidas en el colorido y aparentemente perfecto mundo de Barbie Land.', 'Greta Gerwig', 114, 'Comedia/FantasÌa', '2023-07-21', 'https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg', 7.8, TRUE),
-('Dune: Parte Dos', 'Paul Atreides se une a Chani y los Fremen mientras busca venganza contra los conspiradores que destruyeron a su familia.', 'Denis Villeneuve', 166, 'Ciencia FicciÛn', '2024-03-01', 'https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', 8.9, TRUE),
-('Guardianes de la Galaxia Vol. 3', 'Peter Quill debe reunir a su equipo para defender el universo y proteger a uno de los suyos.', 'James Gunn', 150, 'AcciÛn/Aventura', '2023-05-05', 'https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg', 8.1, TRUE),
-('Spider-Man: Across the Spider-Verse', 'Miles Morales regresa para la prÛxima aventura del Spider-Verse.', 'Joaquim Dos Santos', 140, 'AnimaciÛn/AcciÛn', '2023-06-02', 'https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg', 8.7, TRUE),
-('The Super Mario Bros. Movie', 'Un fontanero llamado Mario viaja a travÈs de un laberinto subterr·neo con su hermano Luigi.', 'Aaron Horvath', 92, 'AnimaciÛn/Aventura', '2023-04-05', 'https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg', 7.5, TRUE),
-('Inception', 'Un ladrÛn que roba secretos corporativos a travÈs del uso de la tecnologÌa de compartir sueÒos.', 'Christopher Nolan', 148, 'Ciencia FicciÛn/Thriller', '2010-07-16', 'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', 8.8, TRUE),
-('The Dark Knight', 'Cuando la amenaza conocida como el Joker emerge, Batman debe aceptar una de las mayores pruebas psicolÛgicas y fÌsicas.', 'Christopher Nolan', 152, 'AcciÛn/Crimen', '2008-07-18', 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg', 9.0, TRUE),
-('Interstellar', 'Un equipo de exploradores viaja a travÈs de un agujero de gusano en el espacio para asegurar la supervivencia de la humanidad.', 'Christopher Nolan', 169, 'Ciencia FicciÛn/Drama', '2014-11-07', 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', 8.7, TRUE),
-('Avatar: The Way of Water', 'Jake Sully vive con su nueva familia formada en el planeta de Pandora.', 'James Cameron', 192, 'Ciencia FicciÛn/Aventura', '2022-12-16', 'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg', 7.9, TRUE);
+('Oppenheimer', 'La historia del cient√≠fico J. Robert Oppenheimer y su papel en el desarrollo de la bomba at√≥mica.', 'Christopher Nolan', 180, 'Drama/Hist√≥rico', '2023-07-21', 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 8.5, TRUE),
+('Barbie', 'Barbie y Ken est√°n teniendo el mejor momento de sus vidas en el colorido y aparentemente perfecto mundo de Barbie Land.', 'Greta Gerwig', 114, 'Comedia/Fantas√≠a', '2023-07-21', 'https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg', 7.8, TRUE),
+('Dune: Parte Dos', 'Paul Atreides se une a Chani y los Fremen mientras busca venganza contra los conspiradores que destruyeron a su familia.', 'Denis Villeneuve', 166, 'Ciencia Ficci√≥n', '2024-03-01', 'https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', 8.9, TRUE),
+('Guardianes de la Galaxia Vol. 3', 'Peter Quill debe reunir a su equipo para defender el universo y proteger a uno de los suyos.', 'James Gunn', 150, 'Acci√≥n/Aventura', '2023-05-05', 'https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg', 8.1, TRUE),
+('Spider-Man: Across the Spider-Verse', 'Miles Morales regresa para la pr√≥xima aventura del Spider-Verse.', 'Joaquim Dos Santos', 140, 'Animaci√≥n/Acci√≥n', '2023-06-02', 'https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg', 8.7, TRUE),
+('The Super Mario Bros. Movie', 'Un fontanero llamado Mario viaja a trav√©s de un laberinto subterr√°neo con su hermano Luigi.', 'Aaron Horvath', 92, 'Animaci√≥n/Aventura', '2023-04-05', 'https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg', 7.5, TRUE),
+('Inception', 'Un ladr√≥n que roba secretos corporativos a trav√©s del uso de la tecnolog√≠a de compartir sue√±os.', 'Christopher Nolan', 148, 'Ciencia Ficci√≥n/Thriller', '2010-07-16', 'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', 8.8, TRUE),
+('The Dark Knight', 'Cuando la amenaza conocida como el Joker emerge, Batman debe aceptar una de las mayores pruebas psicol√≥gicas y f√≠sicas.', 'Christopher Nolan', 152, 'Acci√≥n/Crimen', '2008-07-18', 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg', 9.0, TRUE),
+('Interstellar', 'Un equipo de exploradores viaja a trav√©s de un agujero de gusano en el espacio para asegurar la supervivencia de la humanidad.', 'Christopher Nolan', 169, 'Ciencia Ficci√≥n/Drama', '2014-11-07', 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', 8.7, TRUE),
+('Avatar: The Way of Water', 'Jake Sully vive con su nueva familia formada en el planeta de Pandora.', 'James Cameron', 192, 'Ciencia Ficci√≥n/Aventura', '2022-12-16', 'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg', 7.9, TRUE);
 
-SELECT '10 PelÌculas insertadas' AS Mensaje;
+SELECT '10 Pel√≠culas insertadas' AS Mensaje;
 
 -- ============================================
 -- Insertar Salas
 -- ============================================
 INSERT INTO Salas (Nombre, Filas, ColumnasPerFila) VALUES
 ('Sala 1 - Premium', 8, 10),
-('Sala 2 - Est·ndar', 10, 12),
+('Sala 2 - Est√°ndar', 10, 12),
 ('Sala 3 - VIP', 6, 8),
 ('Sala 4 - IMAX', 12, 15);
 
@@ -283,80 +281,109 @@ DROP PROCEDURE InsertarButacasSala4;
 SELECT '428 Butacas insertadas (Sala 1: 80, Sala 2: 120, Sala 3: 48, Sala 4: 180)' AS Mensaje;
 
 -- ============================================
--- Insertar Sesiones para hoy y prÛximos dÌas
+-- Insertar Sesiones para hoy y pr√≥ximos d√≠as
 -- ============================================
-
 SELECT 'Insertando sesiones...' AS Mensaje;
 
--- Sesiones para HOY
+-- Sesiones para HOY (D√≠a 0)
 INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
--- Oppenheimer
-(1, 4, DATE_ADD(CURDATE(), INTERVAL 16 HOUR), 12.50, TRUE),
-(1, 4, DATE_ADD(CURDATE(), INTERVAL 20 HOUR), 14.00, TRUE),
--- Barbie
-(2, 2, DATE_ADD(CURDATE(), INTERVAL 17 HOUR), 9.50, TRUE),
-(2, 2, DATE_ADD(CURDATE(), INTERVAL 19 HOUR), 9.50, TRUE),
-(2, 2, DATE_ADD(CURDATE(), INTERVAL 21 HOUR), 11.00, TRUE),
--- Dune: Parte Dos
-(3, 4, DATE_ADD(CURDATE(), INTERVAL 18 HOUR), 13.00, TRUE),
-(3, 1, DATE_ADD(CURDATE(), INTERVAL 22 HOUR), 12.00, TRUE),
--- Guardianes de la Galaxia Vol. 3
-(4, 2, DATE_ADD(CURDATE(), INTERVAL 16 HOUR), 10.00, TRUE),
-(4, 3, DATE_ADD(CURDATE(), INTERVAL 20 HOUR), 15.00, TRUE),
--- Spider-Man
-(5, 1, DATE_ADD(CURDATE(), INTERVAL 17 HOUR), 10.50, TRUE),
-(5, 1, DATE_ADD(CURDATE(), INTERVAL 21 HOUR), 11.50, TRUE);
+(1, 4, DATE_ADD(CURDATE(), INTERVAL 16 HOUR), 12.50, TRUE), (1, 4, DATE_ADD(CURDATE(), INTERVAL 20 HOUR), 14.00, TRUE),
+(2, 2, DATE_ADD(CURDATE(), INTERVAL 17 HOUR), 9.50, TRUE), (2, 2, DATE_ADD(CURDATE(), INTERVAL 19 HOUR), 9.50, TRUE), (2, 2, DATE_ADD(CURDATE(), INTERVAL 21 HOUR), 11.00, TRUE),
+(3, 4, DATE_ADD(CURDATE(), INTERVAL 18 HOUR), 13.00, TRUE), (3, 1, DATE_ADD(CURDATE(), INTERVAL 22 HOUR), 12.00, TRUE),
+(4, 2, DATE_ADD(CURDATE(), INTERVAL 16 HOUR), 10.00, TRUE), (4, 3, DATE_ADD(CURDATE(), INTERVAL 20 HOUR), 15.00, TRUE),
+(5, 1, DATE_ADD(CURDATE(), INTERVAL 17 HOUR), 10.50, TRUE), (5, 1, DATE_ADD(CURDATE(), INTERVAL 21 HOUR), 11.50, TRUE);
 
--- Sesiones para MA—ANA
+-- Sesiones para MA√ëANA (D√≠a 1)
 INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
--- Oppenheimer
-(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 15 HOUR), 12.50, TRUE),
-(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 19 HOUR), 14.00, TRUE),
-(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 22 HOUR), 14.00, TRUE),
--- Barbie
-(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 16 HOUR), 9.50, TRUE),
-(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 18 HOUR), 9.50, TRUE),
-(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 20 HOUR), 11.00, TRUE),
-(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 22 HOUR), 11.00, TRUE),
--- Dune: Parte Dos
-(3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 17 HOUR), 13.00, TRUE),
-(3, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 21 HOUR), 12.00, TRUE),
--- The Super Mario Bros
-(6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 15 HOUR), 8.50, TRUE),
-(6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 17 HOUR), 8.50, TRUE),
--- Inception
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 15 HOUR), 12.50, TRUE), (1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 19 HOUR), 14.00, TRUE), (1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 22 HOUR), 14.00, TRUE),
+(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 18 HOUR), 9.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 20 HOUR), 11.00, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 22 HOUR), 11.00, TRUE),
+(3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 17 HOUR), 13.00, TRUE), (3, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 21 HOUR), 12.00, TRUE),
+(6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 15 HOUR), 8.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 17 HOUR), 8.50, TRUE),
 (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 20 HOUR), 14.00, TRUE),
--- The Dark Knight
 (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 18 HOUR), 14.00, TRUE);
 
--- Sesiones para PASADO MA—ANA
+-- Sesiones para PASADO MA√ëANA (D√≠a 2)
 INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
--- Spider-Man
-(5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 16 HOUR), 10.50, TRUE),
-(5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 19 HOUR), 11.50, TRUE),
-(5, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 21 HOUR), 13.00, TRUE),
--- Interstellar
-(9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 17 HOUR), 12.50, TRUE),
-(9, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 21 HOUR), 15.00, TRUE),
--- Avatar
-(10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 15 HOUR), 13.50, TRUE),
-(10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 19 HOUR), 14.50, TRUE),
--- Barbie
-(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 18 HOUR), 9.50, TRUE),
-(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 20 HOUR), 11.00, TRUE);
+(5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 16 HOUR), 10.50, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 19 HOUR), 11.50, TRUE), (5, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 21 HOUR), 13.00, TRUE),
+(9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 17 HOUR), 12.50, TRUE), (9, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 21 HOUR), 15.00, TRUE),
+(10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 15 HOUR), 13.50, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 19 HOUR), 14.50, TRUE),
+(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 18 HOUR), 9.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 2 DAY), INTERVAL 20 HOUR), 11.00, TRUE);
 
--- Sesiones para dentro de 3 dÌas
+-- Sesiones D√≠a 3
 INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
--- Dune: Parte Dos
-(3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 16 HOUR), 13.00, TRUE),
-(3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 20 HOUR), 14.00, TRUE),
--- The Dark Knight
+(3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 16 HOUR), 13.00, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 20 HOUR), 14.00, TRUE),
 (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 19 HOUR), 14.00, TRUE),
--- Guardianes de la Galaxia
-(4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 17 HOUR), 10.00, TRUE),
-(4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 21 HOUR), 11.00, TRUE);
+(4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 17 HOUR), 10.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 3 DAY), INTERVAL 21 HOUR), 11.00, TRUE);
 
-SELECT '40 Sesiones insertadas (distribuidas en 4 dÌas)' AS Mensaje;
+-- Sesiones D√≠a 4
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 DAY), INTERVAL 15 HOUR), 12.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 DAY), INTERVAL 18 HOUR), 13.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 DAY), INTERVAL 19 HOUR), 10.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 DAY), INTERVAL 20 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 DAY), INTERVAL 21 HOUR), 14.00, TRUE);
+
+-- Sesiones D√≠a 5
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 5 DAY), INTERVAL 17 HOUR), 14.00, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 5 DAY), INTERVAL 18 HOUR), 12.50, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 5 DAY), INTERVAL 20 HOUR), 13.50, TRUE), (1, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 5 DAY), INTERVAL 21 HOUR), 12.00, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 5 DAY), INTERVAL 19 HOUR), 9.50, TRUE);
+
+-- Sesiones D√≠a 6
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 6 DAY), INTERVAL 16 HOUR), 13.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 6 DAY), INTERVAL 17 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 6 DAY), INTERVAL 18 HOUR), 10.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 6 DAY), INTERVAL 19 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 6 DAY), INTERVAL 20 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 6 DAY), INTERVAL 22 HOUR), 14.00, TRUE);
+
+-- Sesiones D√≠a 7
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 7 DAY), INTERVAL 15 HOUR), 12.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 7 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 7 DAY), INTERVAL 17 HOUR), 13.00, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 7 DAY), INTERVAL 19 HOUR), 12.50, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 7 DAY), INTERVAL 21 HOUR), 14.50, TRUE);
+
+-- Sesiones D√≠a 8
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 8 DAY), INTERVAL 16 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 8 DAY), INTERVAL 17 HOUR), 10.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 8 DAY), INTERVAL 18 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 8 DAY), INTERVAL 19 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 8 DAY), INTERVAL 21 HOUR), 14.00, TRUE);
+
+-- Sesiones D√≠a 9
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 9 DAY), INTERVAL 16 HOUR), 12.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 9 DAY), INTERVAL 17 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 9 DAY), INTERVAL 18 HOUR), 13.00, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 9 DAY), INTERVAL 20 HOUR), 12.50, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 9 DAY), INTERVAL 22 HOUR), 14.50, TRUE);
+
+-- Sesiones D√≠a 10
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 10 DAY), INTERVAL 15 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 10 DAY), INTERVAL 16 HOUR), 10.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 10 DAY), INTERVAL 17 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 10 DAY), INTERVAL 18 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 10 DAY), INTERVAL 20 HOUR), 14.00, TRUE), (1, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 10 DAY), INTERVAL 21 HOUR), 12.00, TRUE);
+
+-- Sesiones D√≠a 11
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 11 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 11 DAY), INTERVAL 17 HOUR), 13.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 11 DAY), INTERVAL 18 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 11 DAY), INTERVAL 19 HOUR), 10.50, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 11 DAY), INTERVAL 20 HOUR), 12.50, TRUE);
+
+-- Sesiones D√≠a 12
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 12 DAY), INTERVAL 15 HOUR), 12.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 12 DAY), INTERVAL 16 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 12 DAY), INTERVAL 17 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 12 DAY), INTERVAL 19 HOUR), 14.00, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 12 DAY), INTERVAL 21 HOUR), 14.50, TRUE);
+
+-- Sesiones D√≠a 13
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 13 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 13 DAY), INTERVAL 17 HOUR), 13.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 13 DAY), INTERVAL 18 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 13 DAY), INTERVAL 19 HOUR), 10.50, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 13 DAY), INTERVAL 20 HOUR), 12.50, TRUE), (1, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 13 DAY), INTERVAL 21 HOUR), 12.00, TRUE);
+
+-- Sesiones D√≠a 14
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 14 DAY), INTERVAL 15 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 14 DAY), INTERVAL 16 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 14 DAY), INTERVAL 18 HOUR), 14.00, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 14 DAY), INTERVAL 19 HOUR), 14.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 14 DAY), INTERVAL 20 HOUR), 9.50, TRUE);
+
+-- Sesiones D√≠a 15
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 15 DAY), INTERVAL 16 HOUR), 12.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 15 DAY), INTERVAL 18 HOUR), 13.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 15 DAY), INTERVAL 17 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 15 DAY), INTERVAL 19 HOUR), 10.50, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 15 DAY), INTERVAL 21 HOUR), 12.50, TRUE);
+
+-- Sesiones D√≠a 16
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 16 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 16 DAY), INTERVAL 17 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 16 DAY), INTERVAL 18 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 16 DAY), INTERVAL 20 HOUR), 14.00, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 16 DAY), INTERVAL 21 HOUR), 14.50, TRUE);
+
+-- Sesiones D√≠a 17
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 17 DAY), INTERVAL 15 HOUR), 12.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 17 DAY), INTERVAL 17 HOUR), 13.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 17 DAY), INTERVAL 18 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 17 DAY), INTERVAL 19 HOUR), 10.50, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 17 DAY), INTERVAL 20 HOUR), 12.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 17 DAY), INTERVAL 21 HOUR), 9.50, TRUE);
+
+-- Sesiones D√≠a 18
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 18 DAY), INTERVAL 16 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 18 DAY), INTERVAL 17 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 18 DAY), INTERVAL 19 HOUR), 14.00, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 18 DAY), INTERVAL 20 HOUR), 14.50, TRUE), (1, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 18 DAY), INTERVAL 21 HOUR), 12.00, TRUE);
+
+-- Sesiones D√≠a 19
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 19 DAY), INTERVAL 15 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 19 DAY), INTERVAL 16 HOUR), 13.00, TRUE), (4, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 19 DAY), INTERVAL 17 HOUR), 10.00, TRUE), (5, 1, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 19 DAY), INTERVAL 18 HOUR), 10.50, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 19 DAY), INTERVAL 19 HOUR), 12.50, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 19 DAY), INTERVAL 21 HOUR), 14.50, TRUE);
+
+-- Sesiones D√≠a 20 (√∫ltimo d√≠a)
+INSERT INTO Sesiones (PeliculaId, SalaId, FechaHora, Precio, Activa) VALUES
+(1, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 15 HOUR), 12.50, TRUE), (2, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 16 HOUR), 9.50, TRUE), (3, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 17 HOUR), 13.00, TRUE), (6, 2, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 18 HOUR), 8.50, TRUE), (7, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 19 HOUR), 14.00, TRUE), (8, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 20 HOUR), 14.00, TRUE), (9, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 21 HOUR), 12.50, TRUE), (10, 4, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 20 DAY), INTERVAL 22 HOUR), 14.50, TRUE);
+
+SELECT 'Sesiones ampliadas: 135 sesiones totales (distribuidas en 21 d√≠as hasta el d√≠a 20)' AS Mensaje;
 
 -- ============================================
 -- Insertar algunas Reservas de ejemplo
@@ -371,21 +398,21 @@ SELECT '3 Reservas de ejemplo insertadas' AS Mensaje;
 -- ============================================
 -- Insertar ReservaButacas de ejemplo
 -- ============================================
--- Reserva 1: Usuario 1, SesiÛn 1 (Oppenheimer Sala 4 hoy 16:00), 2 butacas
+-- Reserva 1: Usuario 1, Sesi√≥n 1 (Oppenheimer Sala 4 hoy 16:00), 2 butacas
 INSERT INTO ReservasButacas (ReservaId, ButacaId, SesionId)
 SELECT 1, Id, 1 FROM Butacas WHERE SalaId = 4 AND Fila = 6 AND Columna = 7 LIMIT 1;
 
 INSERT INTO ReservasButacas (ReservaId, ButacaId, SesionId)
 SELECT 1, Id, 1 FROM Butacas WHERE SalaId = 4 AND Fila = 6 AND Columna = 8 LIMIT 1;
 
--- Reserva 2: Usuario 2, SesiÛn 3 (Barbie Sala 2 hoy 17:00), 2 butacas
+-- Reserva 2: Usuario 2, Sesi√≥n 3 (Barbie Sala 2 hoy 17:00), 2 butacas
 INSERT INTO ReservasButacas (ReservaId, ButacaId, SesionId)
 SELECT 2, Id, 3 FROM Butacas WHERE SalaId = 2 AND Fila = 5 AND Columna = 5 LIMIT 1;
 
 INSERT INTO ReservasButacas (ReservaId, ButacaId, SesionId)
 SELECT 2, Id, 3 FROM Butacas WHERE SalaId = 2 AND Fila = 5 AND Columna = 6 LIMIT 1;
 
--- Reserva 3: Usuario 3, SesiÛn 5 (Barbie Sala 2 hoy 21:00), 2 butacas
+-- Reserva 3: Usuario 3, Sesi√≥n 5 (Barbie Sala 2 hoy 21:00), 2 butacas
 INSERT INTO ReservasButacas (ReservaId, ButacaId, SesionId)
 SELECT 3, Id, 5 FROM Butacas WHERE SalaId = 2 AND Fila = 7 AND Columna = 6 LIMIT 1;
 
@@ -395,11 +422,11 @@ SELECT 3, Id, 5 FROM Butacas WHERE SalaId = 2 AND Fila = 7 AND Columna = 7 LIMIT
 SELECT 'ReservasButacas insertadas (6 butacas reservadas en total)' AS Mensaje;
 
 -- ============================================
--- CONSULTAS DE VERIFICACI”N
+-- CONSULTAS DE VERIFICACI√ìN
 -- ============================================
 
 SELECT '============================================' AS '';
-SELECT 'VERIFICACI”N DE DATOS' AS '';
+SELECT 'VERIFICACI√ìN DE DATOS' AS '';
 SELECT '============================================' AS '';
 
 -- Contar registros por tabla
@@ -458,18 +485,18 @@ INNER JOIN Salas sa ON s.SalaId = sa.Id
 ORDER BY r.FechaReserva DESC;
 
 SELECT '============================================' AS '';
-SELECT '? Base de datos Cine_(nombre) creada exitosamente en AWS RDS' AS '';
+SELECT 'Base de datos Cine_nixon creada exitosamente en AWS RDS' AS '';
 SELECT '============================================' AS '';
 SELECT '' AS '';
 SELECT 'RESUMEN:' AS '';
 SELECT '- Usuarios: 4' AS '';
-SELECT '- PelÌculas: 10' AS '';
+SELECT '- Pel√≠culas: 10' AS '';
 SELECT '- Salas: 4' AS '';
 SELECT '- Butacas: 428 (total en todas las salas)' AS '';
-SELECT '- Sesiones: 40 (distribuidas en 4 dÌas)' AS '';
+SELECT '- Sesiones: 135 (distribuidas en 21 d√≠as hasta el d√≠a 20)' AS '';
 SELECT '- Reservas: 3' AS '';
 SELECT '- ReservasButacas: 6' AS '';
 SELECT '' AS '';
-SELECT 'La base de datos est· lista para usar con tu aplicaciÛn Cine_app' AS '';
-SELECT 'ConexiÛn: dbinterfacesnixon.cn0swo6cw91x.us-east-1.rds.amazonaws.com' AS '';
+SELECT 'La base de datos est√° lista para usar con tu aplicaci√≥n Cine_app' AS '';
+SELECT 'Conexi√≥n: dbinterfacesnixon.cn0swo6cw91x.us-east-1.rds.amazonaws.com' AS '';
 SELECT '============================================' AS '';

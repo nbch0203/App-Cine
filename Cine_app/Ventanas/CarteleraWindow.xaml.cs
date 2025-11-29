@@ -1,10 +1,13 @@
-ï»¿using System.Windows;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
-using Cine_app.Models;
-using Cine_app.Services;
+using Cine_app.Modelos;
 using Cine_app.Servicios;
 
-namespace Cine_app.Views
+namespace Cine_app.Ventanas
 {
     public partial class CarteleraWindow : Window
     {
@@ -16,12 +19,31 @@ namespace Cine_app.Views
             _dbService = new ServicioBaseDeDatos();
 
             Loaded += CarteleraWindow_Loaded;
+            
+            // Suscribirse a eventos de sesión
+            ServicioSesion.Instance.SesionIniciada += OnSesionCambiada;
+            ServicioSesion.Instance.SesionCerrada += OnSesionCambiada;
+            
             ActualizarEstadoUsuario();
         }
 
         private async void CarteleraWindow_Loaded(object sender, RoutedEventArgs e)
         {
             await CargarPeliculas();
+        }
+
+        private void OnSesionCambiada(object? sender, EventArgs e)
+        {
+            // Actualizar UI cuando cambia el estado de la sesión
+            Dispatcher.Invoke(() => ActualizarEstadoUsuario());
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            // Desuscribirse de eventos al cerrar
+            ServicioSesion.Instance.SesionIniciada -= OnSesionCambiada;
+            ServicioSesion.Instance.SesionCerrada -= OnSesionCambiada;
+            base.OnClosed(e);
         }
 
         private void ActualizarEstadoUsuario()
@@ -32,13 +54,13 @@ namespace Cine_app.Views
                 txtUsuario.Text = usuario?.Nombre ?? "Usuario";
                 btnPerfilUsuario.Visibility = Visibility.Visible;
                 txtUsuarioInvitado.Visibility = Visibility.Collapsed;
-                btnCuentaAccion.Content = "Cerrar SesiÃ³n";
+                btnCuentaAccion.Content = "Cerrar Sesión";
             }
             else
             {
                 btnPerfilUsuario.Visibility = Visibility.Collapsed;
                 txtUsuarioInvitado.Visibility = Visibility.Visible;
-                btnCuentaAccion.Content = "Iniciar SesiÃ³n";
+                btnCuentaAccion.Content = "Iniciar Sesión";
             }
         }
 
@@ -64,7 +86,7 @@ namespace Cine_app.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar pelÃ­culas: {ex.Message}",
+                MessageBox.Show($"Error al cargar películas: {ex.Message}",
                               "Error",
                               MessageBoxButton.OK,
                               MessageBoxImage.Error);
@@ -94,13 +116,16 @@ namespace Cine_app.Views
 
         private void AbrirVentanaSeleccionSesion(int peliculaId)
         {
-            // Obtener la pelÃ­cula seleccionada
+            // Obtener la película seleccionada
             var pelicula = (itemsPeliculas.ItemsSource as List<Pelicula>)?.FirstOrDefault(p => p.Id == peliculaId);
 
             if (pelicula != null)
             {
                 var seleccionSesionWindow = new SeleccionSesionWindow(pelicula);
                 seleccionSesionWindow.ShowDialog();
+                
+                // Actualizar estado después de cerrar la ventana (por si se logueó)
+                ActualizarEstadoUsuario();
             }
         }
 
@@ -108,10 +133,10 @@ namespace Cine_app.Views
         {
             if (ServicioSesion.Instance.EstaAutenticado)
             {
-                // Cerrar sesiÃ³n
+                // Cerrar sesión
                 var result = MessageBox.Show(
-                    "Â¿EstÃ¡s seguro de que deseas cerrar sesiÃ³n?",
-                    "Cerrar SesiÃ³n",
+                    "¿Estás seguro de que deseas cerrar sesión?",
+                    "Cerrar Sesión",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
@@ -119,12 +144,12 @@ namespace Cine_app.Views
                 {
                     ServicioSesion.Instance.CerrarSesion();
                     ActualizarEstadoUsuario();
-                    MessageBox.Show("SesiÃ³n cerrada correctamente", "Cerrar SesiÃ³n", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Sesión cerrada correctamente", "Cerrar Sesión", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             else
             {
-                // Iniciar sesiÃ³n
+                // Iniciar sesión
                 var loginWindow = new LoginWindow();
                 loginWindow.ShowDialog();
                 ActualizarEstadoUsuario();

@@ -1,10 +1,9 @@
-﻿using System.Windows;
+using System;
+using System.Windows;
 using Cine_app.Modelos;
-using Cine_app.Models;
-using Cine_app.Services;
 using Cine_app.Servicios;
 
-namespace Cine_app.Views
+namespace Cine_app.Ventanas
 {
     public partial class LoginWindow : Window
     {
@@ -20,10 +19,10 @@ namespace Cine_app.Views
         private async void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             // Ocultar mensaje de error previo
-            txtError.Visibility = Visibility.Collapsed;
-            txtError.Text = "";
+            txtMensaje.Visibility = Visibility.Collapsed;
+            txtMensaje.Text = "";
 
-            // Validar campos vacíos
+            // Validar campos vacios
             if (string.IsNullOrWhiteSpace(txtEmail.Text))
             {
                 MostrarError("Por favor, ingrese su email");
@@ -33,12 +32,12 @@ namespace Cine_app.Views
 
             if (string.IsNullOrWhiteSpace(txtPassword.Password))
             {
-                MostrarError("Por favor, ingrese su contraseña");
+                MostrarError("Por favor, ingrese su contrasena");
                 txtPassword.Focus();
                 return;
             }
 
-            // Deshabilitar botón mientras se valida
+            // Deshabilitar boton mientras se valida
             btnLogin.IsEnabled = false;
             btnLogin.Content = "Validando...";
 
@@ -52,7 +51,7 @@ namespace Cine_app.Views
 
                 if (UsuarioAutenticado != null)
                 {
-                    // Login exitoso - guardar en el servicio de sesión
+                    // Login exitoso - guardar en el servicio de sesion
                     ServicioSesion.Instance.IniciarSesion(UsuarioAutenticado);
                     this.DialogResult = true;
                     this.Close();
@@ -60,7 +59,7 @@ namespace Cine_app.Views
                 else
                 {
                     // Credenciales incorrectas
-                    MostrarError("Email o contraseña incorrectos");
+                    MostrarError("Email o contrasena incorrectos");
                     txtPassword.Password = "";
                     txtPassword.Focus();
                 }
@@ -71,9 +70,9 @@ namespace Cine_app.Views
             }
             finally
             {
-                // Rehabilitar botón
+                // Rehabilitar boton
                 btnLogin.IsEnabled = true;
-                btnLogin.Content = "Iniciar Sesión";
+                btnLogin.Content = "Iniciar Sesion";
             }
         }
 
@@ -86,9 +85,9 @@ namespace Cine_app.Views
             // Si el registro fue exitoso, mostrar mensaje
             if (resultado == true)
             {
-                txtError.Text = "✓ Registro completado. Por favor, inicie sesión con sus credenciales.";
-                txtError.Foreground = System.Windows.Media.Brushes.Green;
-                txtError.Visibility = Visibility.Visible;
+                txtMensaje.Text = "Registro completado. Por favor, inicie sesion con sus credenciales.";
+                txtMensaje.Foreground = System.Windows.Media.Brushes.Green;
+                txtMensaje.Visibility = Visibility.Visible;
                 
                 // Limpiar campos
                 txtEmail.Text = "";
@@ -97,17 +96,10 @@ namespace Cine_app.Views
             }
         }
 
-        private void BtnInvitado_Click(object sender, RoutedEventArgs e)
-        {
-            // Cerrar sin autenticar
-            this.DialogResult = false;
-            this.Close();
-        }
-
         private void MostrarError(string mensaje)
         {
-            txtError.Text = mensaje;
-            txtError.Visibility = Visibility.Visible;
+            txtMensaje.Text = mensaje;
+            txtMensaje.Visibility = Visibility.Visible;
         }
 
         // Permitir login con Enter

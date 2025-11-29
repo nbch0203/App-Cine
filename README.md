@@ -230,6 +230,7 @@ Cine_app/
 │   ├── RegistroWindow.xaml / .cs
 │   ├── SeleccionSesionWindow.xaml / .cs
 │   ├── SeleccionButacasWindow.xaml / .cs
+│   ├── **PagoWindow.xaml**           # NUEVA ventana de pago
 │   └── PerfilUsuarioWindow.xaml / .cs
 │
 ├── 📂 Database/
@@ -273,8 +274,21 @@ Al finalizar la guía, tu aplicación tendrá:
 - [x] Tipos de butacas (Normal/VIP/Discapacitado)
 - [x] Selección múltiple de butacas
 - [x] Cálculo automático del total
+- [x] **Sistema de pago con múltiples métodos**
+- [x] **Validación de datos de pago**
 - [x] Generación de código de reserva
 - [x] Transacciones seguras
+
+### 💳 Métodos de Pago (NUEVO)
+- [x] **Tarjeta de Crédito/Débito**
+  - Validación de número (16 dígitos)
+  - Validación de fecha de expiración
+  - Verificación de CVV
+- [x] **Bizum**
+  - Validación de teléfono español
+- [x] **PayPal**
+  - Validación de email
+  - Contraseña segura
 
 ### 📊 Historial
 - [x] Ver reservas activas
@@ -377,3 +391,18 @@ cd App-de-cine
 ---
 
 ## 🆘 Ayuda y Soporte
+
+### Características Principales
+- ✅ Visualización de cartelera de películas activas
+- ✅ Selección de sesiones por fecha con calendario interactivo
+- ✅ Selección visual de butacas con efecto de perspectiva 3D
+- ✅ **Sistema de pago simulado con múltiples métodos** (Tarjeta, Bizum, PayPal)
+- ✅ Validaciones completas de datos de pago
+- ✅ Sistema de autenticación de usuarios
+- ✅ Registro de nuevos usuarios con validación
+- ✅ Gestión de perfil y cambio de contraseña
+- ✅ Historial de reservas personalizado
+- ✅ Generación automática de códigos de reserva únicos
+- ✅ Manejo inteligente de estados de butacas
+- ✅ Soporte para diferentes tipos de butacas (Normal, VIP, Discapacitado)
+- ✅ Interfaz moderna con diseño consistente

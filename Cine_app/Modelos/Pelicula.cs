@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Cine_app.Models
+namespace Cine_app.Modelos
 {
     public class Pelicula
     {

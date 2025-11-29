@@ -217,6 +217,8 @@ CREATE TABLE ReservasButacas (
 **¿Qué acabamos de hacer?**
 Hemos creado 7 tablas que van a guardar toda la información de nuestra aplicación: usuarios, películas, salas, sesiones, butacas y reservas.
 
+**🆕 ACTUALIZACIÓN:** El sistema ahora incluye una ventana de pago completa con múltiples métodos (Tarjeta, Bizum, PayPal) que se ejecuta antes de confirmar las reservas.
+
 ---
 
 ### Paso 2.2: Insertar datos de prueba

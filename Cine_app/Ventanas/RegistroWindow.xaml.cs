@@ -1,9 +1,12 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Text.RegularExpressions;
 using Cine_app.Modelos;
-using Cine_app.Services;
+using Cine_app.Servicios;
 
-namespace Cine_app.Views
+namespace Cine_app.Ventanas
 {
     public partial class RegistroWindow : Window
     {
@@ -60,10 +63,10 @@ namespace Cine_app.Views
                 if (registroExitoso)
                 {
                     MostrarExito("¡Registro exitoso! Redirigiendo al inicio de sesión...");
-                    
+
                     // Esperar un momento para que el usuario vea el mensaje
                     await Task.Delay(1500);
-                    
+
                     // Cerrar ventana con resultado exitoso
                     this.DialogResult = true;
                     this.Close();

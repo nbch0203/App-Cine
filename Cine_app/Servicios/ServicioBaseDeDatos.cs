@@ -1,9 +1,7 @@
 ﻿using Cine_app.Modelos;
-using Cine_app.Models;
 using MySql.Data.MySqlClient;
-using System.Data;
 
-namespace Cine_app.Services
+namespace Cine_app.Servicios
 {
     public class ServicioBaseDeDatos
     {
@@ -31,15 +29,15 @@ namespace Cine_app.Services
                     {
                         peliculas.Add(new Pelicula
                         {
-                            Id = reader.GetInt32("Id"),
-                            Titulo = reader.GetString("Titulo"),
-                            Descripcion = reader.IsDBNull("Descripcion") ? null : reader.GetString("Descripcion"),
-                            Director = reader.IsDBNull("Director") ? null : reader.GetString("Director"),
-                            Duracion = reader.IsDBNull("Duracion") ? null : reader.GetInt32("Duracion"),
-                            Genero = reader.IsDBNull("Genero") ? null : reader.GetString("Genero"),
-                            ImagenUrl = reader.IsDBNull("ImagenUrl") ? null : reader.GetString("ImagenUrl"),
-                            FechaEstreno = reader.IsDBNull("FechaEstreno") ? null : reader.GetDateTime("FechaEstreno"),
-                            Activa = reader.GetBoolean("Activa")
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                            Descripcion = reader.IsDBNull(reader.GetOrdinal("Descripcion")) ? null : reader.GetString(reader.GetOrdinal("Descripcion")),
+                            Director = reader.IsDBNull(reader.GetOrdinal("Director")) ? null : reader.GetString(reader.GetOrdinal("Director")),
+                            Duracion = reader.IsDBNull(reader.GetOrdinal("Duracion")) ? null : reader.GetInt32(reader.GetOrdinal("Duracion")),
+                            Genero = reader.IsDBNull(reader.GetOrdinal("Genero")) ? null : reader.GetString(reader.GetOrdinal("Genero")),
+                            ImagenUrl = reader.IsDBNull(reader.GetOrdinal("ImagenUrl")) ? null : reader.GetString(reader.GetOrdinal("ImagenUrl")),
+                            FechaEstreno = reader.IsDBNull(reader.GetOrdinal("FechaEstreno")) ? null : reader.GetDateTime(reader.GetOrdinal("FechaEstreno")),
+                            Activa = reader.GetBoolean(reader.GetOrdinal("Activa"))
                         });
                     }
                 }
@@ -83,18 +81,18 @@ namespace Cine_app.Services
                         {
                             sesiones.Add(new Sesion
                             {
-                                Id = reader.GetInt32("Id"),
-                                PeliculaId = reader.GetInt32("PeliculaId"),
-                                SalaId = reader.GetInt32("SalaId"),
-                                FechaHora = reader.GetDateTime("FechaHora"),
-                                Precio = reader.GetDecimal("Precio"),
-                                Activa = reader.GetBoolean("Activa"),
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                PeliculaId = reader.GetInt32(reader.GetOrdinal("PeliculaId")),
+                                SalaId = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                FechaHora = reader.GetDateTime(reader.GetOrdinal("FechaHora")),
+                                Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                                Activa = reader.GetBoolean(reader.GetOrdinal("Activa")),
                                 Sala = new Sala
                                 {
-                                    Id = reader.GetInt32("SalaId"),
-                                    Nombre = reader.GetString("SalaNombre"),
-                                    Filas = reader.GetInt32("Filas"),
-                                    ColumnasPerFila = reader.GetInt32("ColumnasPerFila")
+                                    Id = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                    Nombre = reader.GetString(reader.GetOrdinal("SalaNombre")),
+                                    Filas = reader.GetInt32(reader.GetOrdinal("Filas")),
+                                    ColumnasPerFila = reader.GetInt32(reader.GetOrdinal("ColumnasPerFila"))
                                 }
                             });
                         }
@@ -122,12 +120,12 @@ namespace Cine_app.Services
                         {
                             butacas.Add(new Butaca
                             {
-                                Id = reader.GetInt32("Id"),
-                                SalaId = reader.GetInt32("SalaId"),
-                                Fila = reader.GetInt32("Fila"),
-                                Columna = reader.GetInt32("Columna"),
-                                Tipo = reader.GetString("Tipo"),
-                                Activa = reader.GetBoolean("Activa")
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                SalaId = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                Fila = reader.GetInt32(reader.GetOrdinal("Fila")),
+                                Columna = reader.GetInt32(reader.GetOrdinal("Columna")),
+                                Tipo = reader.GetString(reader.GetOrdinal("Tipo")),
+                                Activa = reader.GetBoolean(reader.GetOrdinal("Activa"))
                             });
                         }
                     }
@@ -156,7 +154,7 @@ namespace Cine_app.Services
                     {
                         while (await reader.ReadAsync())
                         {
-                            butacasReservadas.Add(reader.GetInt32("ButacaId"));
+                            butacasReservadas.Add(reader.GetInt32(reader.GetOrdinal("ButacaId")));
                         }
                     }
                 }
@@ -183,13 +181,13 @@ namespace Cine_app.Services
                         {
                             return new Usuario
                             {
-                                Id = reader.GetInt32("Id"),
-                                Nombre = reader.GetString("Nombre"),
-                                Apellidos = reader.GetString("Apellidos"),
-                                Email = reader.GetString("Email"),
-                                Telefono = reader.IsDBNull("Telefono") ? null : reader.GetString("Telefono"),
-                                FechaRegistro = reader.GetDateTime("FechaRegistro"),
-                                Activo = reader.GetBoolean("Activo")
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                                Apellidos = reader.GetString(reader.GetOrdinal("Apellidos")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
+                                FechaRegistro = reader.GetDateTime(reader.GetOrdinal("FechaRegistro")),
+                                Activo = reader.GetBoolean(reader.GetOrdinal("Activo"))
                             };
                         }
                     }
@@ -275,33 +273,33 @@ namespace Cine_app.Services
                                 {
                                     var reserva = new Reserva
                                     {
-                                        Id = reader.GetInt32("Id"),
-                                        UsuarioId = reader.GetInt32("UsuarioId"),
-                                        SesionId = reader.GetInt32("SesionId"),
-                                        FechaReserva = reader.GetDateTime("FechaReserva"),
-                                        Total = reader.GetDecimal("Total"),
-                                        Estado = reader.GetString("Estado"),
+                                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                        UsuarioId = reader.GetInt32(reader.GetOrdinal("UsuarioId")),
+                                        SesionId = reader.GetInt32(reader.GetOrdinal("SesionId")),
+                                        FechaReserva = reader.GetDateTime(reader.GetOrdinal("FechaReserva")),
+                                        Total = reader.GetDecimal(reader.GetOrdinal("Total")),
+                                        Estado = reader.GetString(reader.GetOrdinal("Estado")),
                                         CodigoReserva = reader.IsDBNull(reader.GetOrdinal("CodigoReserva")) 
                                             ? null 
-                                            : reader.GetString("CodigoReserva"),
+                                            : reader.GetString(reader.GetOrdinal("CodigoReserva")),
                                         Sesion = new Sesion
                                         {
-                                            Id = reader.GetInt32("SesionId"),
-                                            FechaHora = reader.GetDateTime("FechaHora"),
-                                            PeliculaId = reader.GetInt32("PeliculaId"),
+                                            Id = reader.GetInt32(reader.GetOrdinal("SesionId")),
+                                            FechaHora = reader.GetDateTime(reader.GetOrdinal("FechaHora")),
+                                            PeliculaId = reader.GetInt32(reader.GetOrdinal("PeliculaId")),
                                             Pelicula = new Pelicula
                                             {
-                                                Titulo = reader.GetString("Titulo"),
+                                                Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
                                                 ImagenUrl = reader.IsDBNull(reader.GetOrdinal("ImagenUrl")) 
                                                     ? null 
-                                                    : reader.GetString("ImagenUrl"),
+                                                    : reader.GetString(reader.GetOrdinal("ImagenUrl")),
                                                 Duracion = reader.IsDBNull(reader.GetOrdinal("Duracion")) 
                                                     ? null 
-                                                    : reader.GetInt32("Duracion")
+                                                    : reader.GetInt32(reader.GetOrdinal("Duracion"))
                                             },
                                             Sala = new Sala
                                             {
-                                                Nombre = reader.GetString("SalaNombre")
+                                                Nombre = reader.GetString(reader.GetOrdinal("SalaNombre"))
                                             }
                                         },
                                         Butacas = new List<ReservaButaca>()
@@ -362,16 +360,16 @@ namespace Cine_app.Services
                         {
                             butacas.Add(new ReservaButaca
                             {
-                                Id = reader.GetInt32("Id"),
-                                ReservaId = reader.GetInt32("ReservaId"),
-                                ButacaId = reader.GetInt32("ButacaId"),
-                                SesionId = reader.GetInt32("SesionId"),
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                ReservaId = reader.GetInt32(reader.GetOrdinal("ReservaId")),
+                                ButacaId = reader.GetInt32(reader.GetOrdinal("ButacaId")),
+                                SesionId = reader.GetInt32(reader.GetOrdinal("SesionId")),
                                 Butaca = new Butaca
                                 {
-                                    Id = reader.GetInt32("ButacaId"),
-                                    Fila = reader.GetInt32("Fila"),
-                                    Columna = reader.GetInt32("Columna"),
-                                    Tipo = reader.GetString("Tipo")
+                                    Id = reader.GetInt32(reader.GetOrdinal("ButacaId")),
+                                    Fila = reader.GetInt32(reader.GetOrdinal("Fila")),
+                                    Columna = reader.GetInt32(reader.GetOrdinal("Columna")),
+                                    Tipo = reader.GetString(reader.GetOrdinal("Tipo"))
                                 }
                             });
                         }

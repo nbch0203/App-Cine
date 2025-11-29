@@ -809,34 +809,102 @@ Aplicar descuentos a ciertos usuarios o días.
 ### Mejora 7: Pagos
 Integrar una pasarela de pago real (Stripe, PayPal).
 
-### Mejora 8: Notificaciones
-Enviar recordatorios de reservas por email.
+---
+
+## 🆕 ACTUALIZACIÓN: Sistema de Pago Implementado
+
+### Paso 5.7: Ventana de Pago - PagoWindow
+
+El sistema ahora incluye una ventana de pago completa que se ejecuta antes de procesar las reservas.
+
+#### Características Implementadas:
+
+**Métodos de Pago:**
+- 💳 **Tarjeta de Crédito/Débito**
+- 📱 **Bizum**
+- 🅿️ **PayPal**
+
+**Validaciones por Método:**
+1. **Tarjeta:**
+   - Número: 16 dígitos
+   - Titular: mínimo 3 caracteres
+   - Fecha de expiración: formato MM/AA, no vencida
+   - CVV: 3-4 dígitos
+
+2. **Bizum:**
+   - Teléfono: 9 dígitos
+   - Debe empezar por 6, 7 o 9
+
+3. **PayPal:**
+   - Email: formato válido
+   - Contraseña: mínimo 6 caracteres
+
+#### Flujo Actualizado:
+
+```
+1. Usuario selecciona butacas
+2. Click en "Confirmar Reserva"
+3. Se abre PagoWindow
+4. Usuario elige método de pago
+5. Completa formulario
+6. Sistema valida datos
+7. Simula procesamiento (2 segundos)
+8. Si es exitoso → Procesa reserva en BD
+9. Muestra código de reserva
+```
+
+#### Archivos Creados:
+
+- `Cine_app/Ventanas/PagoWindow.xaml`
+- `Cine_app/Ventanas/PagoWindow.xaml.cs`
+
+#### Integración con SeleccionButacasWindow:
+
+El método `BtnConfirmarReserva_Click` ahora abre `PagoWindow` antes de procesar la reserva:
+
+```csharp
+private async void BtnConfirmarReserva_Click(object sender, RoutedEventArgs e)
+{
+    // Validaciones...
+    
+    decimal total = _butacasSeleccionadas.Count * _sesion.Precio;
+    
+    // Abrir ventana de pago
+    var pagoWindow = new PagoWindow(total);
+    var resultado = pagoWindow.ShowDialog();
+    
+    // Solo procesar si el pago fue exitoso
+    if (resultado == true && pagoWindow.PagoExitoso)
+    {
+        await ProcesarReserva();
+    }
+}
+```
+
+#### Ejemplos de Datos de Prueba:
+
+**Tarjeta:**
+```
+Número: 4532015112830366
+Titular: JUAN PEREZ
+Fecha: 12/25
+CVV: 123
+```
+
+**Bizum:**
+```
+Teléfono: 666555444
+```
+
+**PayPal:**
+```
+Email: usuario@gmail.com
+Contraseña: password123
+```
 
 ---
 
-## 🎓 FASE 10: Conceptos Aprendidos
-
-### Conceptos de Programación
-- ✅ **Programación Orientada a Objetos**: Clases, propiedades, métodos
-- ✅ **CRUD**: Create, Read, Update, Delete en base de datos
-- ✅ **Async/Await**: Programación asíncrona
-- ✅ **Eventos**: Manejo de eventos de UI
-- ✅ **Patrón Singleton**: Para gestión de sesión
-- ✅ **Data Binding**: Enlace de datos XAML-C#
-- ✅ **Validación de Datos**: Verificación de entradas del usuario
-- ✅ **Transacciones**: Operaciones atómicas en BD
-
-### Tecnologías
-- ✅ **WPF**: Windows Presentation Foundation
-- ✅ **XAML**: Lenguaje de marcado para interfaces
-- ✅ **C#**: Lenguaje de programación
-- ✅ **MySQL**: Base de datos relacional
-- ✅ **ADO.NET**: Acceso a datos
-- ✅ **Git**: Control de versiones (si usaste)
-
----
-
-## 📝 CHECKLIST FINAL
+## 📋 Checklist Final ACTUALIZADO
 
 Antes de considerar el proyecto terminado, verifica:
 

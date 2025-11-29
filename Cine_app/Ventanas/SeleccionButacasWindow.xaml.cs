@@ -1,12 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Cine_app.Modelos;
-using Cine_app.Models;
-using Cine_app.Services;
 using Cine_app.Servicios;
 
-namespace Cine_app.Views
+namespace Cine_app.Ventanas
 {
     public partial class SeleccionButacasWindow : Window
     {
@@ -31,8 +33,13 @@ namespace Cine_app.Views
         private void CargarInformacion()
         {
             txtTituloPelicula.Text = _pelicula.Titulo;
-            txtInfoSesion.Text = $"{_sesion.FechaHora:dddd, dd MMMM yyyy - HH:mm} • {_sesion.Sala?.Nombre} • {_sesion.Precio:F2}€";
-            txtPrecioUnitario.Text = $"{_sesion.Precio:F2}€";
+            txtInfoSesion.Text = $"{_sesion.FechaHora:dddd, dd MMMM yyyy - HH:mm} - {_sesion.Sala?.Nombre}";
+            txtPrecioUnitario.Text = $"Desde {_sesion.Precio:F2} EUR";
+            
+            // Actualizar precios en la leyenda
+            txtPrecioNormal.Text = $"{_sesion.Precio:F2} EUR";
+            txtPrecioVIP.Text = $"{(_sesion.Precio + 3.00m):F2} EUR (+3.00 EUR)";
+            txtPrecioDiscapacitado.Text = $"{_sesion.Precio:F2} EUR";
         }
 
         private async Task CargarButacas()
@@ -105,11 +112,26 @@ namespace Cine_app.Views
 
                 // Calcular tamaño de butaca según la fila (perspectiva)
                 double factorTamanio = 0.7 + ((double)fila / filas * 0.3); // 0.7 a 1.0
-                int anchoButaca = (int)(45 * factorTamanio);
-                int altoButaca = (int)(45 * factorTamanio);
+                int anchoButaca = (int)(50 * factorTamanio);
+                int altoButaca = (int)(50 * factorTamanio);
+
+                // Calcular punto medio para el pasillo
+                int mitadColumnas = columnas / 2;
 
                 for (int columna = 1; columna <= columnas; columna++)
                 {
+                    // Añadir espacio para el pasillo central
+                    if (columna == mitadColumnas + 1)
+                    {
+                        var pasillo = new Border
+                        {
+                            Width = 30, // Ancho del pasillo
+                            Height = altoButaca,
+                            Background = Brushes.Transparent
+                        };
+                        panelFila.Children.Add(pasillo);
+                    }
+
                     var butaca = _todasLasButacas.FirstOrDefault(b => b.Fila == fila && b.Columna == columna);
 
                     if (butaca != null)
@@ -148,7 +170,7 @@ namespace Cine_app.Views
                 Height = alto,
                 Margin = new Thickness(2),
                 FontWeight = FontWeights.Bold,
-                FontSize = 11
+                FontSize = 12
             };
 
             // Verificar si la butaca está ocupada
@@ -220,7 +242,7 @@ namespace Cine_app.Views
             {
                 txtButacasSeleccionadas.Text = "Ninguna";
                 txtCantidad.Text = "0 butacas";
-                txtTotal.Text = "0,00€";
+                txtTotal.Text = "0,00 EUR";
                 btnConfirmarReserva.IsEnabled = false;
             }
             else
@@ -235,9 +257,9 @@ namespace Cine_app.Views
                 // Cantidad
                 txtCantidad.Text = $"{_butacasSeleccionadas.Count} butaca{(_butacasSeleccionadas.Count > 1 ? "s" : "")}";
 
-                // Total
-                decimal total = _butacasSeleccionadas.Count * _sesion.Precio;
-                txtTotal.Text = $"{total:F2}€";
+                // Total (considerando precio base + extras por tipo de butaca)
+                decimal total = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
+                txtTotal.Text = $"{total:F2} EUR";
 
                 btnConfirmarReserva.IsEnabled = true;
             }
@@ -264,17 +286,16 @@ namespace Cine_app.Views
                 return;
             }
 
-            var resultado = MessageBox.Show(
-                $"¿Confirmar reserva de {_butacasSeleccionadas.Count} butaca{(_butacasSeleccionadas.Count > 1 ? "s" : "")}?\n\n" +
-                $"Butacas: {txtButacasSeleccionadas.Text}\n" +
-                $"Total: {txtTotal.Text}\n\n" +
-                $"Esta acción simulará el pago y guardará la reserva.",
-                "Confirmar Reserva",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            // Calcular total (considerando precio base + extras)
+            decimal total = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
 
-            if (resultado == MessageBoxResult.Yes)
+            // Abrir ventana de pago
+            var pagoWindow = new PagoWindow(total);
+            var resultado = pagoWindow.ShowDialog();
+
+            if (resultado == true && pagoWindow.PagoExitoso)
             {
+                // Pago exitoso, procesar reserva
                 await ProcesarReserva();
             }
         }
@@ -286,8 +307,8 @@ namespace Cine_app.Views
                 btnConfirmarReserva.IsEnabled = false;
                 btnConfirmarReserva.Content = "Procesando...";
 
-                // Calcular total
-                decimal total = _butacasSeleccionadas.Count * _sesion.Precio;
+                // Calcular total (considerando precio base + extras)
+                decimal total = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
 
                 // Crear reserva
                 var reserva = new Reserva

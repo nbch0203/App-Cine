@@ -1,7 +1,8 @@
-using System.Windows;
+using System;
 using System.Globalization;
 using System.Threading;
-using Cine_app.Views;
+using System.Windows;
+using Cine_app.Ventanas;
 using Cine_app.Modelos;
 
 namespace Cine_app

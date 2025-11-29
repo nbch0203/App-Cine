@@ -1,16 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Cine_app.Modelos;
-using Cine_app.Services;
 using Cine_app.Servicios;
 
-namespace Cine_app.Views
+namespace Cine_app.Ventanas
 {
     public partial class PerfilUsuarioWindow : Window
     {
         private readonly ServicioBaseDeDatos _dbService;
         private Usuario? _usuario;
+        private List<ReservaViewModel> _todasLasReservas = new List<ReservaViewModel>();
 
         public PerfilUsuarioWindow()
         {
@@ -83,6 +87,7 @@ namespace Cine_app.Views
                 pnlLoadingReservas.Visibility = Visibility.Visible;
                 itemsReservas.Visibility = Visibility.Collapsed;
                 pnlSinReservas.Visibility = Visibility.Collapsed;
+                pnlSinResultados.Visibility = Visibility.Collapsed;
 
                 List<Reserva> reservas = null;
                 
@@ -108,7 +113,7 @@ namespace Cine_app.Views
                 }
 
                 // Crear una lista con información formateada usando la clase ReservaViewModel
-                var reservasFormateadas = new List<ReservaViewModel>();
+                _todasLasReservas = new List<ReservaViewModel>();
                 
                 foreach (var r in reservas)
                 {
@@ -152,7 +157,7 @@ namespace Cine_app.Views
                             }
                         }
 
-                        reservasFormateadas.Add(new ReservaViewModel
+                        _todasLasReservas.Add(new ReservaViewModel
                         {
                             Sesion = r.Sesion,
                             Total = r.Total,
@@ -166,9 +171,9 @@ namespace Cine_app.Views
                     }
                 }
 
-                if (reservasFormateadas.Any())
+                if (_todasLasReservas.Any())
                 {
-                    itemsReservas.ItemsSource = reservasFormateadas;
+                    itemsReservas.ItemsSource = _todasLasReservas;
                     itemsReservas.Visibility = Visibility.Visible;
                 }
                 else
@@ -192,6 +197,60 @@ namespace Cine_app.Views
             {
                 pnlLoadingReservas.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void TxtBuscarReserva_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string busqueda = txtBuscarReserva.Text.Trim().ToLower();
+
+            // Mostrar/ocultar botón de limpiar
+            btnLimpiarBusqueda.Visibility = string.IsNullOrEmpty(busqueda) ? Visibility.Collapsed : Visibility.Visible;
+
+            if (string.IsNullOrEmpty(busqueda))
+            {
+                // Mostrar todas las reservas
+                itemsReservas.ItemsSource = _todasLasReservas;
+                
+                if (_todasLasReservas.Any())
+                {
+                    itemsReservas.Visibility = Visibility.Visible;
+                    pnlSinReservas.Visibility = Visibility.Collapsed;
+                    pnlSinResultados.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    itemsReservas.Visibility = Visibility.Collapsed;
+                    pnlSinReservas.Visibility = Visibility.Visible;
+                    pnlSinResultados.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                // Filtrar reservas por nombre de película
+                var reservasFiltradas = _todasLasReservas
+                    .Where(r => r.Sesion?.Pelicula?.Titulo?.ToLower().Contains(busqueda) == true)
+                    .ToList();
+
+                if (reservasFiltradas.Any())
+                {
+                    itemsReservas.ItemsSource = reservasFiltradas;
+                    itemsReservas.Visibility = Visibility.Visible;
+                    pnlSinReservas.Visibility = Visibility.Collapsed;
+                    pnlSinResultados.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    itemsReservas.Visibility = Visibility.Collapsed;
+                    pnlSinReservas.Visibility = Visibility.Collapsed;
+                    pnlSinResultados.Visibility = Visibility.Visible;
+                    txtBusqueda.Text = $"No se encontraron reservas con \"{txtBuscarReserva.Text}\"";
+                }
+            }
+        }
+
+        private void BtnLimpiarBusqueda_Click(object sender, RoutedEventArgs e)
+        {
+            txtBuscarReserva.Clear();
         }
 
         private async void BtnCambiarPassword_Click(object sender, RoutedEventArgs e)

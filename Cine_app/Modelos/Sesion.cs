@@ -1,7 +1,4 @@
-﻿using Cine_app.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Cine_app.Modelos
 {

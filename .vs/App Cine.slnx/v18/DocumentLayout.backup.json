@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\.env.example||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.env.example||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Guia paso a paso\\GUIA_PASO_A_PASO.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}"
     },
@@ -21,6 +29,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\README.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:README.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\CONTRIBUTING.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CONTRIBUTING.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,7 +50,44 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CONTRIBUTING.md",
+              "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\CONTRIBUTING.md",
+              "RelativeDocumentMoniker": "CONTRIBUTING.md",
+              "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\CONTRIBUTING.md",
+              "RelativeToolTip": "CONTRIBUTING.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-28T20:50:39.111Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".env.example",
+              "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\.env.example",
+              "RelativeDocumentMoniker": ".env.example",
+              "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\.env.example",
+              "RelativeToolTip": ".env.example",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-28T20:44:24.713Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": ".gitignore",
+              "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AgIAAIABAAAAAAAAAAAAAEsBAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-28T20:44:13.772Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "GUIA_PASO_A_PASO_PARTE_4.md",
               "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_4.md",
               "RelativeDocumentMoniker": "Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_4.md",
@@ -46,60 +95,55 @@
               "RelativeToolTip": "Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_4.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-28T20:24:42.257Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-28T20:24:42.257Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "GUIA_PASO_A_PASO_PARTE_3.md",
               "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_3.md",
               "RelativeDocumentMoniker": "Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_3.md",
               "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_3.md",
               "RelativeToolTip": "Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_3.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADcEAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-28T20:24:36.062Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-28T20:24:36.062Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "GUIA_PASO_A_PASO_PARTE_2.md",
               "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_2.md",
               "RelativeDocumentMoniker": "Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_2.md",
               "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_2.md",
               "RelativeToolTip": "Guia paso a paso\\GUIA_PASO_A_PASO_PARTE_2.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAE4EAAAAAAAAAMBdwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-28T20:24:31.682Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-28T20:24:31.682Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "GUIA_PASO_A_PASO.md",
               "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO.md",
               "RelativeDocumentMoniker": "Guia paso a paso\\GUIA_PASO_A_PASO.md",
               "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\Guia paso a paso\\GUIA_PASO_A_PASO.md",
               "RelativeToolTip": "Guia paso a paso\\GUIA_PASO_A_PASO.md",
-              "ViewState": "AgIAAAUEAAAAAAAAAAAnwAEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHcEAAAAAAAAAAAnwAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-28T20:21:08.1Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-28T20:21:08.1Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "README.md",
               "DocumentMoniker": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\README.md",
               "RelativeDocumentMoniker": "README.md",
               "ToolTip": "D:\\Clases\\DAM\\Segundo_DAM\\Desarrollo_de_interfaces\\App Cine\\README.md",
               "RelativeToolTip": "README.md",
-              "ViewState": "AgIAADgBAAAAAAAAAAAnwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHUBAAAAAAAAAIBZwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-28T20:18:32.302Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-28T20:18:32.302Z"
             }
           ]
         }

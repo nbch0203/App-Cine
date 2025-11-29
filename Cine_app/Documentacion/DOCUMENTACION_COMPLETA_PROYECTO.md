@@ -20,6 +20,7 @@ Sistema de reserva de cine desarrollado en **WPF (Windows Presentation Foundatio
 - ✅ Visualización de cartelera de películas activas
 - ✅ Selección de sesiones por fecha
 - ✅ Selección visual de butacas con efecto de perspectiva
+- ✅ **Sistema de pago simulado con múltiples métodos**
 - ✅ Sistema de autenticación de usuarios
 - ✅ Registro de nuevos usuarios
 - ✅ Gestión de perfil y cambio de contraseña
@@ -229,7 +230,7 @@ El proyecto sigue una arquitectura en capas:
 │   │   │   ├── → Visualización 3D de sala
 │   │   │   ├── → Gestión de butacas (disponible/ocupada/seleccionada)
 │   │   │   ├── → Cálculo de total en tiempo real
-│   │   │   └── → Confirmación de reserva
+│   │   │   └── → Navegación a ventana de pago
 │   │   │
 │   │   ├── 🎨 Características visuales
 │   │   │   ├── ✓ Efecto de perspectiva
@@ -244,8 +245,47 @@ El proyecto sigue una arquitectura en capas:
 │   │       ├── → CrearBotonButaca()
 │   │       ├── → BtnButaca_Click()
 │   │       ├── → ActualizarResumen()
-│   │       ├── → BtnConfirmarReserva_Click()
-│   │       └── → ProcesarReserva()
+│   │       ├── → BtnConfirmarReserva_Click() [Abre PagoWindow]
+│   │       └── → ProcesarReserva() [Después del pago]
+│   │
+│   ├── 💳 PagoWindow.xaml[.cs]         # **NUEVA** Ventana de pago
+│   │   ├── 📋 Responsabilidades
+│   │   │   ├── → Selección de método de pago
+│   │   │   ├── → Validación de datos de pago
+│   │   │   ├── → Simulación de procesamiento
+│   │   │   └── → Confirmación de pago exitoso
+│   │   │
+│   │   ├── 💳 Métodos de Pago
+│   │   │   ├── → Tarjeta de Crédito/Débito
+│   │   │   ├── → Bizum
+│   │   │   └── → PayPal
+│   │   │
+│   │   ├── 🔒 Validaciones por Método
+│   │   │   ├── → Tarjeta:
+│   │   │   │   ├── ✓ Número (16 dígitos)
+│   │   │   │   ├── ✓ Titular (min 3 caracteres)
+│   │   │   │   ├── ✓ Fecha expiración (MM/AA, no vencida)
+│   │   │   │   └── ✓ CVV (3 o 4 dígitos)
+│   │   │   ├── → Bizum:
+│   │   │   │   └── ✓ Teléfono (9 dígitos, empieza por 6, 7 o 9)
+│   │   │   └── → PayPal:
+│   │   │       ├── ✓ Email (formato válido)
+│   │   │       └── ✓ Contraseña (min 6 caracteres)
+│   │   │
+│   │   └── 🔧 Métodos principales
+│   │       ├── → BtnMetodoTarjeta_Click()
+│   │       ├── → BtnMetodoBizum_Click()
+│   │       ├── → BtnMetodoPaypal_Click()
+│   │       ├── → SeleccionarMetodoPago()
+│   │       ├── → MostrarFormulario()
+│   │       ├── → ResaltarBoton()
+│   │       ├── → ValidarFormularioTarjeta()
+│   │       ├── → ValidarFormularioBizum()
+│   │       ├── → ValidarFormularioPaypal()
+│   │       ├── → BtnPagar_Click()
+│   │       ├── → BtnCancelar_Click()
+│   │       ├── → MostrarError()
+│   │       └── → OcultarError()
 │   │
 │   └── 👤 PerfilUsuarioWindow.xaml[.cs]    # Perfil y reservas
 │       ├── 📋 Responsabilidades
@@ -368,6 +408,7 @@ El proyecto sigue una arquitectura en capas:
 | `RegistroWindow` | Modal | Registro de nuevos usuarios |
 | `SeleccionSesionWindow` | Modal | Selección de fecha/hora |
 | `SeleccionButacasWindow` | Modal | Selección de asientos |
+| `PagoWindow` | Modal | Procesamiento de pago |
 | `PerfilUsuarioWindow` | Modal | Perfil y reservas |
 
 ---
@@ -1263,7 +1304,7 @@ private Button CrearBotonButaca(Butaca butaca, double size, int fila, int column
 - Configura evento Click
 - Establece propiedades:
   - Width/Height
-  - Content (identificador, ej: "A1")
+  - Content (identificador, ej: "A1", "B5")
   - Tag (objeto Butaca)
   - IsEnabled (según si está ocupada)
 
@@ -1361,7 +1402,338 @@ Background = Blue, Foreground = White
 
 ---
 
-### 6. **PerfilUsuarioWindow** (Perfil y Reservas) 👤
+### 6. **PagoWindow** (Sistema de Pago) 💳
+
+#### Descripción
+Ventana modal que simula un sistema de pago completo con múltiples métodos de pago. Permite al usuario seleccionar su método preferido, ingresar los datos correspondientes y validar la información antes de confirmar la reserva.
+
+#### Elementos de UI
+
+**Cabecera:**
+- Icono de pago (💳)
+- Título: "Realizar Pago"
+- Total a pagar (destacado en verde)
+
+**Selección de Método de Pago:**
+Tres botones grandes con información:
+- 💳 **Tarjeta de Crédito/Débito**
+  - Texto: "Visa, Mastercard, American Express"
+- 📱 **Bizum**
+  - Texto: "Pago instantáneo con tu móvil"
+- 🅿️ **PayPal**
+  - Texto: "Pago seguro con tu cuenta PayPal"
+
+**Formularios (se muestra uno según método seleccionado):**
+
+1. **Formulario de Tarjeta:**
+   - Campo: Número de tarjeta (16 dígitos)
+   - Campo: Nombre del titular
+   - Campo: Fecha de expiración (MM/AA)
+   - Campo: CVV (3-4 dígitos, PasswordBox)
+
+2. **Formulario de Bizum:**
+   - Campo: Número de teléfono (9 dígitos)
+   - Texto informativo
+
+3. **Formulario de PayPal:**
+   - Campo: Correo electrónico
+   - Campo: Contraseña (PasswordBox)
+   - Texto informativo
+
+**Panel de Error:**
+- Área para mostrar mensajes de validación
+- Color rojo para errores
+
+**Botones de Acción:**
+- "Cancelar" (gris)
+- "Pagar" (naranja, deshabilitado hasta seleccionar método)
+
+#### Propiedades Privadas
+```csharp
+private decimal _montoTotal;
+private string _metodoPagoSeleccionado;
+public bool PagoExitoso { get; private set; }
+```
+
+#### Constructor
+```csharp
+public PagoWindow(decimal montoTotal)
+```
+- Recibe monto total como parámetro
+- Inicializa propiedades
+- Muestra total en UI
+
+#### Métodos de Selección de Método
+
+**`BtnMetodoTarjeta_Click(object sender, RoutedEventArgs e)`**
+```csharp
+private void BtnMetodoTarjeta_Click(object sender, RoutedEventArgs e)
+```
+- Establece método = "Tarjeta"
+- Muestra formulario de tarjeta
+- Resalta botón seleccionado
+- Habilita botón "Pagar"
+
+**`BtnMetodoBizum_Click(object sender, RoutedEventArgs e)`**
+```csharp
+private void BtnMetodoBizum_Click(object sender, RoutedEventArgs e)
+```
+- Establece método = "Bizum"
+- Muestra formulario de Bizum
+- Resalta botón seleccionado
+- Habilita botón "Pagar"
+
+**`BtnMetodoPaypal_Click(object sender, RoutedEventArgs e)`**
+```csharp
+private void BtnMetodoPaypal_Click(object sender, RoutedEventArgs e)
+```
+- Establece método = "PayPal"
+- Muestra formulario de PayPal
+- Resalta botón seleccionado
+- Habilita botón "Pagar"
+
+**`SeleccionarMetodoPago(string metodo)`**
+```csharp
+private void SeleccionarMetodoPago(string metodo)
+```
+- Actualiza método seleccionado
+- Habilita botón de pagar
+- Oculta errores previos
+
+**`MostrarFormulario(Border formulario)`**
+```csharp
+private void MostrarFormulario(Border formulario)
+```
+- Oculta todos los formularios
+- Muestra solo el formulario seleccionado
+
+**`ResaltarBoton(Button boton)`**
+```csharp
+private void ResaltarBoton(Button boton)
+```
+- Restaura estilo de todos los botones
+- Aplica borde naranja al botón seleccionado
+- Aumenta grosor del borde (3px)
+
+#### Métodos de Validación
+
+**`ValidarFormularioTarjeta()`**
+```csharp
+private bool ValidarFormularioTarjeta()
+```
+**Validaciones implementadas:**
+
+1. **Número de Tarjeta:**
+   ```csharp
+   if (!Regex.IsMatch(txtNumeroTarjeta.Text, @"^\d{16}$"))
+       return false;
+   ```
+   - Debe tener exactamente 16 dígitos
+   - Solo números
+
+2. **Nombre del Titular:**
+   ```csharp
+   if (string.IsNullOrWhiteSpace(txtNombreTarjeta.Text) || 
+       txtNombreTarjeta.Text.Length < 3)
+       return false;
+   ```
+   - No vacío
+   - Mínimo 3 caracteres
+
+3. **Fecha de Expiración:**
+   ```csharp
+   if (!Regex.IsMatch(txtFechaExpiracion.Text, @"^(0[1-9]|1[0-2])\/\d{2}$"))
+       return false;
+   ```
+   - Formato MM/AA (ejemplo: 12/25)
+   - Mes válido (01-12)
+   - **Validación de fecha no vencida:**
+     ```csharp
+     var partes = txtFechaExpiracion.Text.Split('/');
+     int mes = int.Parse(partes[0]);
+     int anio = int.Parse(partes[1]) + 2000;
+     var fechaExpiracion = new DateTime(anio, mes, DateTime.DaysInMonth(anio, mes));
+     
+     if (fechaExpiracion < DateTime.Now)
+         return false; // Tarjeta vencida
+     ```
+
+4. **CVV:**
+   ```csharp
+   if (!Regex.IsMatch(txtCVV.Password, @"^\d{3,4}$"))
+       return false;
+   ```
+   - 3 o 4 dígitos
+   - Solo números
+
+**`ValidarFormularioBizum()`**
+```csharp
+private bool ValidarFormularioBizum()
+```
+**Validaciones implementadas:**
+
+1. **Número de Teléfono:**
+   ```csharp
+   if (!Regex.IsMatch(txtTelefonoBizum.Text, @"^[679]\d{8}$"))
+       return false;
+   ```
+   - Exactamente 9 dígitos
+   - Debe empezar por 6, 7 o 9 (números españoles)
+   - Solo números
+
+**`ValidarFormularioPaypal()`**
+```csharp
+private bool ValidarFormularioPaypal()
+```
+**Validaciones implementadas:**
+
+1. **Correo Electrónico:**
+   ```csharp
+   if (!Regex.IsMatch(txtEmailPaypal.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+       return false;
+   ```
+   - Formato válido de email
+   - Debe contener @ y dominio
+   - Ejemplo: usuario@correo.com
+
+2. **Contraseña:**
+   ```csharp
+   if (txtPasswordPaypal.Password.Length < 6)
+       return false;
+   ```
+   - Mínimo 6 caracteres
+
+#### Procesamiento de Pago
+
+**`async BtnPagar_Click(object sender, RoutedEventArgs e)`**
+```csharp
+private async void BtnPagar_Click(object sender, RoutedEventArgs e)
+```
+**Proceso completo:**
+
+1. **Validación según método:**
+   ```csharp
+   bool esValido = _metodoPagoSeleccionado switch
+   {
+       "Tarjeta" => ValidarFormularioTarjeta(),
+       "Bizum" => ValidarFormularioBizum(),
+       "PayPal" => ValidarFormularioPaypal(),
+       _ => false
+   };
+   ```
+
+2. **Si la validación falla:**
+   - Muestra mensaje de error específico
+   - Mantiene ventana abierta
+   - Permite corregir datos
+
+3. **Si la validación es exitosa:**
+   - Deshabilita botón "Pagar"
+   - Cambia texto a "Procesando..."
+   - Simula procesamiento (2 segundos)
+   ```csharp
+   await Task.Delay(2000);
+   ```
+
+4. **Pago exitoso:**
+   - Establece `PagoExitoso = true`
+   - Muestra MessageBox con confirmación:
+     ```
+     ¡Pago procesado correctamente!
+     
+     Método de pago: Tarjeta
+     Monto: 30.00€
+     
+     Recibirás un correo de confirmación...
+     ```
+   - Cierra ventana con `DialogResult = true`
+
+**`BtnCancelar_Click(object sender, RoutedEventArgs e)`**
+```csharp
+private void BtnCancelar_Click(object sender, RoutedEventArgs e)
+```
+- Muestra confirmación
+- Si confirma: Cierra con `DialogResult = false`
+- La reserva NO se procesa
+
+#### Métodos Auxiliares
+
+**`MostrarError(string mensaje)`**
+```csharp
+private void MostrarError(string mensaje)
+```
+- Actualiza texto del error
+- Hace visible el panel de error
+- Aplica estilo rojo
+
+**`OcultarError()`**
+```csharp
+private void OcultarError()
+```
+- Oculta el panel de error
+- Se llama al seleccionar nuevo método
+
+#### Tabla de Validaciones por Método
+
+| Método | Campo | Validación | Regex/Lógica | Ejemplo Válido |
+|--------|-------|-----------|--------------|----------------|
+| **Tarjeta** | Número | 16 dígitos | `^\d{16}$` | `4532015112830366` |
+| | Titular | Min 3 chars | Length >= 3 | `JUAN PEREZ` |
+| | Expiración | MM/AA, futuro | `^(0[1-9]\|1[0-2])\/\d{2}$` + Date | `12/25` |
+| | CVV | 3-4 dígitos | `^\d{3,4}$` | `123` |
+| **Bizum** | Teléfono | 9 dígitos, 6/7/9 | `^[679]\d{8}$` | `666555444` |
+| **PayPal** | Email | Formato válido | `^[^@\s]+@[^@\s]+\.[^@\s]+$` | `user@gmail.com` |
+| | Password | Min 6 chars | Length >= 6 | `pass123` |
+
+#### Mensajes de Error Específicos
+
+**Tarjeta:**
+- "Por favor, ingresa el número de tarjeta."
+- "El número de tarjeta debe tener exactamente 16 dígitos."
+- "Por favor, ingresa el nombre del titular (mínimo 3 caracteres)."
+- "Por favor, ingresa la fecha de expiración."
+- "La fecha de expiración debe tener el formato MM/AA (ejemplo: 12/25)."
+- "La tarjeta está vencida. Por favor, usa una tarjeta válida."
+- "Por favor, ingresa el código CVV."
+- "El CVV debe tener 3 o 4 dígitos."
+
+**Bizum:**
+- "Por favor, ingresa tu número de teléfono."
+- "El número de teléfono debe tener 9 dígitos y comenzar por 6, 7 o 9."
+
+**PayPal:**
+- "Por favor, ingresa tu correo electrónico de PayPal."
+- "El correo electrónico no es válido. Debe tener el formato: ejemplo@correo.com"
+- "Por favor, ingresa tu contraseña de PayPal."
+- "La contraseña debe tener al menos 6 caracteres."
+
+#### Características de Seguridad
+
+✅ **Validación en Cliente:**
+- Validación inmediata antes de enviar
+- Mensajes de error claros
+- Prevención de datos inválidos
+
+✅ **Campos Sensibles:**
+- CVV usa PasswordBox (oculta caracteres)
+- Password de PayPal usa PasswordBox
+
+✅ **Simulación Realista:**
+- Tiempo de procesamiento (2 segundos)
+- Mensajes de confirmación
+- Estado de botón durante procesamiento
+
+⚠️ **Nota de Seguridad:**
+Esta es una **simulación educativa**. En producción:
+- NO almacenar datos de tarjeta
+- Usar pasarela de pago real (Stripe, PayPal API)
+- Implementar HTTPS
+- Cumplir con PCI DSS
+- Tokenización de datos sensibles
+
+---
+
+### 7. **PerfilUsuarioWindow** (Perfil y Reservas) 👤
 
 #### Descripción
 Ventana modal que muestra el perfil del usuario autenticado, permite cambiar contraseña y ver historial de reservas.
@@ -1504,110 +1876,9 @@ private void MostrarMensajePassword(string mensaje, bool esError)
 - ✅ Formato claro de información
 - ✅ Manejo de errores
 
-#### Flujo de Usuario
-
-**Información Personal:**
-1. Usuario ve sus datos
-2. Puede cambiar contraseña
-3. Valida contraseña actual
-4. Ingresa nueva contraseña
-5. Confirma cambio
-6. Mensaje de éxito
-
-**Mis Reservas:**
-1. Usuario navega a "Mis Reservas"
-2. Ve lista de reservas activas
-3. Cada reserva muestra detalles completos
-4. Puede ver códigos de reserva
-
 ---
 
-## Flujo de Navegación
-
-### Diagrama de Flujo General
-
-```
-                    ┌──────────────────────┐
-                    │   INICIO APLICACIÓN  │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │  CarteleraWindow     │◄────────────┐
-                    │  (Ventana Principal) │             │
-                    └──────────┬───────────┘             │
-                               │                         │
-                ┌──────────────┼──────────────┐          │
-                │              │              │          │
-                ▼              ▼              ▼          │
-       ┌──────────────┐ ┌────────────┐   ┌─────────────┐ │
-       │ LoginWindow  │ │Ver Película│   │  Mi Perfil  │ │
-       │              │ │            │   │             │ │
-       └──────┬───────┘ └─────┬──────┘   └──────┬──────┘ │
-              │               │                 │        │
-              │               ▼                 │        │
-              │    ┌──────────────────────┐     │        │
-              │    │SeleccionSesionWindow │     │        │
-              │    └──────────┬───────────┘     │        │
-              │               │                 │        │
-              │               │ (requiere       │        │
-              │               │  autenticación) │        │
-              ▼               ▼                 │        │
-       ┌──────────────┐ ┌───────────────────┐   │        │
-       │RegistroWindow│ │SeleccionButacas   │   │        │
-       │              │ │     Window        │   │        │
-       └──────────────┘ └──────────┬────────┘   │        │
-                                   │            │        │
-                                   │            ▼        │
-                                   │    ┌──────────────┐ │
-                                   │    │PerfilUsuario │ │
-                                   │    │   Window     │ │
-                                   │    └──────────────┘ │
-                                   │                     │
-                                   └─────────────────────┘
-```
-
-### Flujos Detallados
-
-#### 1. **Flujo de Autenticación**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    FLUJO DE AUTENTICACIÓN                   │
-└─────────────────────────────────────────────────────────────┘
-
-1. Usuario entra a CarteleraWindow
-   │
-   ├─► Click en "Iniciar Sesión"
-   │   │
-   │   └─► Abre LoginWindow
-   │       │
-   │       ├─► Opción 1: Ingresa credenciales
-   │       │   ├─► Valida en BD
-   │       │   ├─► Si es correcto:
-   │       │   │   └─► ServicioSesion.IniciarSesion()
-   │       │   │       └─► Cierra LoginWindow
-   │       │   │           └─► Actualiza CarteleraWindow
-   │       │   └─► Si es incorrecto:
-   │       │       └─► Muestra error
-   │       │
-   │       ├─► Opción 2: Click en "Registrarse"
-   │       │   └─► Abre RegistroWindow
-   │       │       ├─► Completa formulario
-   │       │       ├─► Valida campos
-   │       │       ├─► Registra en BD
-   │       │       ├─► Mensaje de éxito
-   │       │       └─► Vuelve a LoginWindow
-   │       │
-   │       └─► Opción 3: Click en "Continuar como Invitado"
-   │           └─► Cierra LoginWindow
-   │               └─► Vuelve a CarteleraWindow (sin autenticar)
-   │
-   └─► Si ya está autenticado:
-       └─► Muestra "Cerrar Sesión" y "Mi Perfil"
-```
-
-#### 2. **Flujo de Reserva de Película**
+## 2. Flujo de Reserva de Película
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1643,94 +1914,42 @@ private void MostrarMensajePassword(string mensaje, bool esError)
                │           │
                │           └─► Click en "Confirmar Reserva"
                │               │
-               │               ├─► Confirmación con MessageBox
-               │               ├─► Procesa reserva (transacción BD)
-               │               ├─► Genera código de reserva
-               │               ├─► Muestra mensaje de éxito
-               │               │
-               │               └─► Cierra SeleccionButacasWindow
-               │                   └─► Vuelve a SeleccionSesionWindow
-               │                       └─► Usuario puede cerrar
-               │                           └─► Vuelve a CarteleraWindow
+               │               └─► Abre PagoWindow 💳
+               │                   │
+               │                   ├─► Muestra total a pagar
+               │                   ├─► Usuario selecciona método de pago:
+               │                   │   ├─► Tarjeta
+               │                   │   ├─► Bizum
+               │                   │   └─► PayPal
+               │                   │
+               │                   ├─► Usuario completa formulario
+               │                   │
+               │                   ├─► Click en "Pagar"
+               │                   │   │
+               │                   │   ├─► Valida datos según método
+               │                   │   │
+               │                   │   ├─► Si hay errores:
+               │                   │   │   └─► Muestra mensaje
+               │                   │   │       └─► Usuario corrige
+               │                   │   │
+               │                   │   └─► Si es válido:
+               │                   │       ├─► Simula procesamiento (2 seg)
+               │                   │       ├─► Muestra confirmación
+               │                   │       └─► Cierra PagoWindow (éxito)
+               │                   │
+               │                   └─► Vuelve a SeleccionButacasWindow
+               │                       │
+               │                       ├─► Si pago exitoso:
+               │                       │   ├─► Procesa reserva (transacción BD)
+               │                       │   ├─► Genera código de reserva
+               │                       │   ├─► Muestra mensaje de éxito
+               │                       │   └─► Cierra SeleccionButacasWindow
+               │                       │       └─► Vuelve a SeleccionSesionWindow
+               │                       │
+               │                       └─► Si pago cancelado:
+               │                           └─► Mantiene butacas seleccionadas
+               │                               └─► Usuario puede reintentar
                │
                └─► Si hay error:
                    └─► Muestra mensaje de error
                        └─► Mantiene ventana abierta
-```
-
-#### 3. **Flujo de Gestión de Perfil**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                 FLUJO DE GESTIÓN DE PERFIL                  │
-└─────────────────────────────────────────────────────────────┘
-
-1. Usuario autenticado en CarteleraWindow
-   │
-   └─► Click en "Mi Perfil"
-       │
-       └─► Abre PerfilUsuarioWindow
-           │
-           ├─► Por defecto: Panel "Información Personal"
-           │   │
-           │   ├─► Ve datos de perfil
-           │   │
-           │   └─► Cambiar contraseña
-           │       ├─► Ingresa contraseña actual
-           │       ├─► Ingresa nueva contraseña
-           │       ├─► Confirma nueva contraseña
-           │       ├─► Click en "Cambiar Contraseña"
-           │       ├─► Valida campos
-           │       ├─► Actualiza en BD
-           │       └─► Muestra mensaje de éxito/error
-           │
-           └─► Click en "Mis Reservas"
-               │
-               └─► Carga historial de reservas
-                   │
-                   ├─► Muestra lista de reservas activas
-                   │   └─► Cada reserva con:
-                   │       ├─► Código
-                   │       ├─► Película
-                   │       ├─► Sesión
-                   │       ├─► Butacas
-                   │       └─► Total
-                   │
-                   └─► Si no hay reservas:
-                       └─► Muestra mensaje "No tienes reservas"
-```
-
-#### 4. **Flujo de Usuario Invitado**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   FLUJO DE USUARIO INVITADO                 │
-└─────────────────────────────────────────────────────────────┘
-
-1. Usuario en CarteleraWindow (sin autenticar)
-   │
-   ├─► Puede ver cartelera de películas
-   │   └─► Click en "Ver Horarios"
-   │       └─► Abre SeleccionSesionWindow
-   │           ├─► Ve información de película
-   │           ├─► Ve calendario y sesiones
-   │           │
-   │           └─► Intenta seleccionar sesión
-   │               └─► Sistema detecta que NO está autenticado
-   │                   └─► Muestra LoginWindow
-   │                       │
-   │                       ├─► Opción 1: Inicia sesión
-   │                       │   └─► Continúa con reserva
-   │                       │
-   │                       ├─► Opción 2: Se registra
-   │                       │   └─► Continúa con reserva
-   │                       │
-   │                       └─► Opción 3: Cancela
-   │                           └─► Vuelve a SeleccionSesionWindow
-   │                       └─► Cerrando LoginWindow
-   │                           └─► Sin autenticación, limitaciones activas
-   │
-   └─► Limitaciones del invitado:
-       ├─► ✗ No puede hacer reservas
-       ├─► ✗ No puede acceder a perfil
-       └─► ✓ Puede ver cartelera e información
