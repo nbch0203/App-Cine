@@ -18,13 +18,18 @@ namespace Cine_app.Ventanas
         private List<Butaca> _todasLasButacas = new();
         private List<int> _butacasOcupadas = new();
         private List<Butaca> _butacasSeleccionadas = new();
+        private readonly int? _reservaIdModificacion;
+        private readonly decimal _recargoModificacion;
+        private List<int> _butacasOriginalesReserva = new();
 
-        public SeleccionButacasWindow(Sesion sesion, Pelicula pelicula)
+        public SeleccionButacasWindow(Sesion sesion, Pelicula pelicula, int? reservaIdModificacion = null, decimal recargoModificacion = 0)
         {
             InitializeComponent();
             _dbService = new ServicioBaseDeDatos();
             _sesion = sesion;
             _pelicula = pelicula;
+            _reservaIdModificacion = reservaIdModificacion;
+            _recargoModificacion = recargoModificacion;
 
             CargarInformacion();
             Loaded += async (s, e) => await CargarButacas();
@@ -34,7 +39,16 @@ namespace Cine_app.Ventanas
         {
             txtTituloPelicula.Text = _pelicula.Titulo;
             txtInfoSesion.Text = $"{_sesion.FechaHora:dddd, dd MMMM yyyy - HH:mm} - {_sesion.Sala?.Nombre}";
-            txtPrecioUnitario.Text = $"Desde {_sesion.Precio:F2} EUR";
+            
+            // Si es una modificación, mostrar el recargo
+            if (_reservaIdModificacion.HasValue && _recargoModificacion > 0)
+            {
+                txtPrecioUnitario.Text = $"Desde {_sesion.Precio:F2} EUR + Recargo modificación";
+            }
+            else
+            {
+                txtPrecioUnitario.Text = $"Desde {_sesion.Precio:F2} EUR";
+            }
             
             // Actualizar precios en la leyenda
             txtPrecioNormal.Text = $"{_sesion.Precio:F2} EUR";
@@ -52,11 +66,25 @@ namespace Cine_app.Ventanas
                 // Cargar butacas de la sala
                 _todasLasButacas = await _dbService.ObtenerButacasPorSalaAsync(_sesion.SalaId);
                 
+                // Si es una modificación, cargar las butacas originales de la reserva
+                if (_reservaIdModificacion.HasValue)
+                {
+                    var butacasOriginales = await _dbService.ObtenerButacasDeReservaConDetallesAsync(_reservaIdModificacion.Value);
+                    _butacasOriginalesReserva = butacasOriginales.Select(b => b.Id).ToList();
+                    
+                    // Pre-seleccionar las butacas originales
+                    _butacasSeleccionadas = butacasOriginales.ToList();
+                }
+                
                 // Cargar butacas ya reservadas para esta sesión
-                _butacasOcupadas = await _dbService.ObtenerButacasReservadasAsync(_sesion.Id);
+                // Si es una modificación, excluir las butacas de la reserva que se está modificando
+                _butacasOcupadas = await _dbService.ObtenerButacasReservadasAsync(_sesion.Id, _reservaIdModificacion);
 
                 // Crear visualización de butacas
                 CrearVisualizacionButacas();
+
+                // Actualizar resumen con las butacas pre-seleccionadas
+                ActualizarResumen();
 
                 itemsButacas.Visibility = Visibility.Visible;
             }
@@ -175,10 +203,19 @@ namespace Cine_app.Ventanas
 
             // Verificar si la butaca está ocupada
             bool estaOcupada = _butacasOcupadas.Contains(butaca.Id);
+            
+            // Verificar si la butaca está pre-seleccionada (de la reserva original)
+            bool estaPreseleccionada = _butacasSeleccionadas.Any(b => b.Id == butaca.Id);
 
             if (estaOcupada)
             {
                 btn.Style = (Style)FindResource("ButacaOcupadaStyle");
+            }
+            else if (estaPreseleccionada)
+            {
+                // Si está pre-seleccionada, mostrarla como seleccionada
+                btn.Style = (Style)FindResource("ButacaSeleccionadaStyle");
+                btn.Click += BtnButaca_Click;
             }
             else
             {
@@ -257,9 +294,19 @@ namespace Cine_app.Ventanas
                 // Cantidad
                 txtCantidad.Text = $"{_butacasSeleccionadas.Count} butaca{(_butacasSeleccionadas.Count > 1 ? "s" : "")}";
 
-                // Total (considerando precio base + extras por tipo de butaca)
-                decimal total = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
-                txtTotal.Text = $"{total:F2} EUR";
+                // Total (considerando precio base + extras por tipo de butaca + recargo si es modificación)
+                decimal totalButacas = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
+                decimal total = totalButacas + _recargoModificacion;
+                
+                // Si hay recargo, mostrarlo en el texto
+                if (_recargoModificacion > 0)
+                {
+                    txtTotal.Text = $"{total:F2} EUR (incluye {_recargoModificacion:F2} EUR de recargo)";
+                }
+                else
+                {
+                    txtTotal.Text = $"{total:F2} EUR";
+                }
 
                 btnConfirmarReserva.IsEnabled = true;
             }
@@ -286,8 +333,9 @@ namespace Cine_app.Ventanas
                 return;
             }
 
-            // Calcular total (considerando precio base + extras)
-            decimal total = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
+            // Calcular total (considerando precio base + extras + recargo si es modificación)
+            decimal totalButacas = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
+            decimal total = totalButacas + _recargoModificacion;
 
             // Abrir ventana de pago
             var pagoWindow = new PagoWindow(total);
@@ -307,8 +355,9 @@ namespace Cine_app.Ventanas
                 btnConfirmarReserva.IsEnabled = false;
                 btnConfirmarReserva.Content = "Procesando...";
 
-                // Calcular total (considerando precio base + extras)
-                decimal total = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
+                // Calcular total (considerando precio base + extras + recargo si es modificación)
+                decimal totalButacas = _butacasSeleccionadas.Sum(b => _sesion.Precio + b.ObtenerPrecioExtra());
+                decimal total = totalButacas + _recargoModificacion;
 
                 // Crear reserva
                 var reserva = new Reserva
@@ -326,14 +375,18 @@ namespace Cine_app.Ventanas
                 // Guardar en base de datos
                 int reservaId = await _dbService.CrearReservaAsync(reserva, butacaIds);
 
+                string mensajeRecargo = _recargoModificacion > 0 
+                    ? $"\nRecargo por modificación: {_recargoModificacion:F2} EUR" 
+                    : "";
+
                 MessageBox.Show(
                     $"¡Reserva confirmada exitosamente!\n\n" +
                     $"Película: {_pelicula.Titulo}\n" +
                     $"Fecha/Hora: {_sesion.FechaHora:dd/MM/yyyy HH:mm}\n" +
                     $"Sala: {_sesion.Sala?.Nombre}\n" +
                     $"Butacas: {txtButacasSeleccionadas.Text}\n" +
-                    $"Total: {txtTotal.Text}\n\n" +
-                    $"Disfrute de la función!",
+                    $"Total: {total:F2} EUR{mensajeRecargo}\n\n" +
+                    $"¡Disfrute de la función!",
                     "Reserva Confirmada",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);

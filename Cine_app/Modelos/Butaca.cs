@@ -54,6 +54,7 @@
     // Clase para el binding de reservas en la UI
     public class ReservaViewModel
     {
+        public int Id { get; set; }
         public Sesion Sesion { get; set; } = new();
         public decimal Total { get; set; }
         public string CodigoReserva { get; set; } = string.Empty;

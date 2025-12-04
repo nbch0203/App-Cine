@@ -100,3 +100,10 @@ D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\n
 D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\Cine_app.pdb
 D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\Cine_app.genruntimeconfig.cache
 D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\ref\Cine_app.dll
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\MainWindow.baml
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\Vistas\CarteleraView.baml
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\Vistas\SeleccionSesionView.baml
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\App.baml
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\MainWindow.g.cs
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\Vistas\CarteleraView.g.cs
+D:\Clases\DAM\Segundo_DAM\Desarrollo_de_interfaces\App Cine\Cine_app\obj\Debug\net10.0-windows\Vistas\SeleccionSesionView.g.cs

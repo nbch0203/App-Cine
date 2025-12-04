@@ -143,6 +143,7 @@ namespace Cine_app.Ventanas
                         }
 
                         string butacasTexto = "N/A";
+                        decimal totalCalculado = 0;
                         
                         if (r.Butacas != null && r.Butacas.Any())
                         {
@@ -154,13 +155,17 @@ namespace Cine_app.Ventanas
                                     .OrderBy(b => b.Butaca.Fila)
                                     .ThenBy(b => b.Butaca.Columna)
                                     .Select(b => $"{(char)('A' + b.Butaca.Fila - 1)}{b.Butaca.Columna}"));
+                                
+                                // Calcular el total correctamente según el tipo de cada butaca
+                                totalCalculado = butacasValidas.Sum(b => r.Sesion.Precio + b.Butaca.ObtenerPrecioExtra());
                             }
                         }
 
                         _todasLasReservas.Add(new ReservaViewModel
                         {
+                            Id = r.Id,
                             Sesion = r.Sesion,
-                            Total = r.Total,
+                            Total = totalCalculado > 0 ? totalCalculado : r.Total, // Usar el calculado o el de BD
                             CodigoReserva = r.CodigoReserva ?? "N/A",
                             Butacas = butacasTexto
                         });
@@ -353,6 +358,178 @@ namespace Cine_app.Ventanas
         private void BtnVolver_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private async void BtnModificarReserva_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int reservaId)
+            {
+                try
+                {
+                    // Obtener la reserva completa
+                    var reserva = await _dbService.ObtenerReservaPorIdAsync(reservaId);
+                    
+                    if (reserva == null)
+                    {
+                        MessageBox.Show("No se pudo encontrar la reserva", 
+                                      "Error", 
+                                      MessageBoxButton.OK, 
+                                      MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Verificar que la sesión no haya pasado
+                    if (reserva.Sesion.FechaHora < DateTime.Now)
+                    {
+                        MessageBox.Show("No se pueden modificar reservas de sesiones que ya han ocurrido", 
+                                      "Sesión pasada", 
+                                      MessageBoxButton.OK, 
+                                      MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Verificar que falte al menos 1 día para la sesión
+                    var tiempoRestante = reserva.Sesion.FechaHora - DateTime.Now;
+                    if (tiempoRestante.TotalDays < 1)
+                    {
+                        MessageBox.Show("Solo se pueden modificar reservas con al menos 1 día de anticipación", 
+                                      "Modificación no permitida", 
+                                      MessageBoxButton.OK, 
+                                      MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Obtener las butacas actuales para calcular el recargo
+                    var butacasActuales = await _dbService.ObtenerButacasDeReservaConDetallesAsync(reservaId);
+                    int cantidadButacas = butacasActuales.Count;
+                    decimal recargoTotal = cantidadButacas * 3.00m;
+
+                    // Confirmar modificación
+                    var resultado = MessageBox.Show(
+                        $"¿Desea modificar las butacas de esta reserva?\n\n" +
+                        $"Película: {reserva.Sesion.Pelicula.Titulo}\n" +
+                        $"Fecha: {reserva.Sesion.FechaHora:dd/MM/yyyy HH:mm}\n" +
+                        $"Butacas actuales: {cantidadButacas}\n\n" +
+                        $"IMPORTANTE:\n" +
+                        $"• Deberá seleccionar nuevamente las butacas\n" +
+                        $"• Se aplicará un recargo de 3,00 EUR por cada asiento\n" +
+                        $"• Recargo total: {recargoTotal:F2} EUR\n\n" +
+                        $"¿Desea continuar?",
+                        "Modificar Reserva",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (resultado == MessageBoxResult.Yes)
+                    {
+                        // Obtener la sesión completa con toda la información
+                        var sesion = await _dbService.ObtenerSesionPorIdAsync(reserva.SesionId);
+                        
+                        if (sesion == null)
+                        {
+                            MessageBox.Show("No se pudo cargar la información de la sesión", 
+                                          "Error", 
+                                          MessageBoxButton.OK, 
+                                          MessageBoxImage.Error);
+                            return;
+                        }
+
+                        // VALIDAR que el precio se haya cargado correctamente
+                        if (sesion.Precio <= 0)
+                        {
+                            MessageBox.Show($"Error: El precio de la sesión no se cargó correctamente.\n\nPrecio encontrado: {sesion.Precio}", 
+                                          "Error de datos", 
+                                          MessageBoxButton.OK, 
+                                          MessageBoxImage.Error);
+                            return;
+                        }
+
+                        // Abrir ventana de selección de butacas con el recargo
+                        var seleccionWindow = new SeleccionButacasWindow(sesion, sesion.Pelicula, reservaId, recargoTotal);
+                        seleccionWindow.ShowDialog();
+
+                        // Si se completó la nueva reserva, eliminar la antigua
+                        if (seleccionWindow.DialogResult == true)
+                        {
+                            await _dbService.EliminarReservaAsync(reservaId);
+                            await CargarReservas(); // Recargar la lista
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al modificar la reserva: {ex.Message}", 
+                                  "Error", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private async void BtnCancelarReserva_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int reservaId)
+            {
+                try
+                {
+                    // Obtener la reserva para mostrar información
+                    var reserva = await _dbService.ObtenerReservaPorIdAsync(reservaId);
+                    
+                    if (reserva == null)
+                    {
+                        MessageBox.Show("No se pudo encontrar la reserva", 
+                                      "Error", 
+                                      MessageBoxButton.OK, 
+                                      MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Confirmar cancelación
+                    var resultado = MessageBox.Show(
+                        $"¿Está seguro de que desea cancelar esta reserva?\n\n" +
+                        $"Película: {reserva.Sesion.Pelicula.Titulo}\n" +
+                        $"Fecha: {reserva.Sesion.FechaHora:dd/MM/yyyy HH:mm}\n" +
+                        $"Total: {reserva.Total:F2} EUR\n\n" +
+                        $"IMPORTANTE:\n" +
+                        $"• La reserva será eliminada completamente\n" +
+                        $"• No se realizará ningún cargo\n" +
+                        $"• Esta acción no se puede deshacer\n\n" +
+                        $"¿Desea continuar?",
+                        "Cancelar Reserva",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+
+                    if (resultado == MessageBoxResult.Yes)
+                    {
+                        // Eliminar la reserva (sin cargos)
+                        bool eliminado = await _dbService.EliminarReservaAsync(reservaId);
+                        
+                        if (eliminado)
+                        {
+                            MessageBox.Show("Reserva cancelada exitosamente.\n\nNo se ha realizado ningún cargo.", 
+                                          "Cancelación exitosa", 
+                                          MessageBoxButton.OK, 
+                                          MessageBoxImage.Information);
+                            
+                            // Recargar la lista de reservas
+                            await CargarReservas();
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo cancelar la reserva. Por favor, intente nuevamente.", 
+                                          "Error", 
+                                          MessageBoxButton.OK, 
+                                          MessageBoxImage.Error);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cancelar la reserva: {ex.Message}", 
+                                  "Error", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

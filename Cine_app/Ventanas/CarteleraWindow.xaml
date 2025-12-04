@@ -63,8 +63,8 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#x1F3AC;" FontFamily="Segoe UI Emoji" FontSize="30" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <TextBlock Text="CINEMA" 
+                    <TextBlock Text="&#x1F3AC;" FontFamily="Segoe UI Emoji" FontSize="30" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
+                    <TextBlock Text="Nixon Cinema" 
                               FontSize="28" 
                               FontWeight="Bold"
                               Foreground="White"

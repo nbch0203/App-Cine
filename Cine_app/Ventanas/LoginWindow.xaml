@@ -64,7 +64,7 @@
                             VerticalContentAlignment="Center"/>
 
                     <!-- Password -->
-                    <TextBlock Text="Contrasena" 
+                    <TextBlock Text="Contraseña" 
                               Foreground="#333"
                               FontWeight="SemiBold"
                               Margin="0,0,0,5"/>

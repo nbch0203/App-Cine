@@ -134,7 +134,7 @@ namespace Cine_app.Servicios
             return butacas;
         }
 
-        public async Task<List<int>> ObtenerButacasReservadasAsync(int sesionId)
+        public async Task<List<int>> ObtenerButacasReservadasAsync(int sesionId, int? excluirReservaId = null)
         {
             var butacasReservadas = new List<int>();
             string sql = @"
@@ -143,6 +143,12 @@ namespace Cine_app.Servicios
                 INNER JOIN Reservas r ON rb.ReservaId = r.Id
                 WHERE rb.SesionId = @SesionId 
                 AND r.Estado IN ('Pendiente', 'Confirmada')";
+            
+            // Si se especifica una reserva a excluir, agregarla a la consulta
+            if (excluirReservaId.HasValue)
+            {
+                sql += " AND r.Id != @ExcluirReservaId";
+            }
 
             using (var conn = new MySqlConnection(connectionString))
             {
@@ -150,6 +156,11 @@ namespace Cine_app.Servicios
                 using (var cmd = new MySqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@SesionId", sesionId);
+                    if (excluirReservaId.HasValue)
+                    {
+                        cmd.Parameters.AddWithValue("@ExcluirReservaId", excluirReservaId.Value);
+                    }
+                    
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -455,6 +466,212 @@ namespace Cine_app.Servicios
                     }
                 }
             }
+        }
+
+        public async Task<Reserva?> ObtenerReservaPorIdAsync(int reservaId)
+        {
+            string sql = @"
+                SELECT r.*, 
+                       p.Titulo, p.ImagenUrl, p.Duracion,
+                       s.FechaHora, s.PeliculaId, s.SalaId,
+                       sal.Nombre as SalaNombre, sal.Filas, sal.ColumnasPerFila
+                FROM Reservas r
+                INNER JOIN Sesiones s ON r.SesionId = s.Id
+                INNER JOIN Peliculas p ON s.PeliculaId = p.Id
+                INNER JOIN Salas sal ON s.SalaId = sal.Id
+                WHERE r.Id = @ReservaId";
+
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ReservaId", reservaId);
+                    
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            var reserva = new Reserva
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                UsuarioId = reader.GetInt32(reader.GetOrdinal("UsuarioId")),
+                                SesionId = reader.GetInt32(reader.GetOrdinal("SesionId")),
+                                FechaReserva = reader.GetDateTime(reader.GetOrdinal("FechaReserva")),
+                                Total = reader.GetDecimal(reader.GetOrdinal("Total")),
+                                Estado = reader.GetString(reader.GetOrdinal("Estado")),
+                                CodigoReserva = reader.IsDBNull(reader.GetOrdinal("CodigoReserva")) 
+                                    ? null 
+                                    : reader.GetString(reader.GetOrdinal("CodigoReserva")),
+                                Sesion = new Sesion
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("SesionId")),
+                                    FechaHora = reader.GetDateTime(reader.GetOrdinal("FechaHora")),
+                                    PeliculaId = reader.GetInt32(reader.GetOrdinal("PeliculaId")),
+                                    SalaId = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                    Pelicula = new Pelicula
+                                    {
+                                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                                        ImagenUrl = reader.IsDBNull(reader.GetOrdinal("ImagenUrl")) 
+                                            ? null 
+                                            : reader.GetString(reader.GetOrdinal("ImagenUrl")),
+                                        Duracion = reader.IsDBNull(reader.GetOrdinal("Duracion")) 
+                                            ? null 
+                                            : reader.GetInt32(reader.GetOrdinal("Duracion"))
+                                    },
+                                    Sala = new Sala
+                                    {
+                                        Nombre = reader.GetString(reader.GetOrdinal("SalaNombre")),
+                                        Filas = reader.GetInt32(reader.GetOrdinal("Filas")),
+                                        ColumnasPerFila = reader.GetInt32(reader.GetOrdinal("ColumnasPerFila"))
+                                    }
+                                }
+                            };
+                            
+                            return reserva;
+                        }
+                    }
+                }
+            }
+            
+            return null;
+        }
+
+        public async Task<bool> EliminarReservaAsync(int reservaId)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+                using (var transaction = await conn.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Primero eliminar las butacas reservadas
+                        string sqlButacas = "DELETE FROM ReservasButacas WHERE ReservaId = @ReservaId";
+                        using (var cmd = new MySqlCommand(sqlButacas, conn, (MySqlTransaction)transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ReservaId", reservaId);
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+
+                        // Luego eliminar la reserva
+                        string sqlReserva = "DELETE FROM Reservas WHERE Id = @ReservaId";
+                        using (var cmd = new MySqlCommand(sqlReserva, conn, (MySqlTransaction)transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ReservaId", reservaId);
+                            int result = await cmd.ExecuteNonQueryAsync();
+                            
+                            if (result > 0)
+                            {
+                                await transaction.CommitAsync();
+                                return true;
+                            }
+                            else
+                            {
+                                await transaction.RollbackAsync();
+                                return false;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        public async Task<List<Butaca>> ObtenerButacasDeReservaConDetallesAsync(int reservaId)
+        {
+            var butacas = new List<Butaca>();
+            string sql = @"
+                SELECT b.*
+                FROM ReservasButacas rb
+                INNER JOIN Butacas b ON rb.ButacaId = b.Id
+                WHERE rb.ReservaId = @ReservaId
+                ORDER BY b.Fila, b.Columna";
+
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ReservaId", reservaId);
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            butacas.Add(new Butaca
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                SalaId = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                Fila = reader.GetInt32(reader.GetOrdinal("Fila")),
+                                Columna = reader.GetInt32(reader.GetOrdinal("Columna")),
+                                Tipo = reader.GetString(reader.GetOrdinal("Tipo")),
+                                Activa = reader.GetBoolean(reader.GetOrdinal("Activa"))
+                            });
+                        }
+                    }
+                }
+            }
+            return butacas;
+        }
+
+        public async Task<Sesion?> ObtenerSesionPorIdAsync(int sesionId)
+        {
+            string sql = @"
+                SELECT s.*, 
+                       p.Titulo, p.ImagenUrl, p.Duracion,
+                       sal.Nombre as SalaNombre, sal.Filas, sal.ColumnasPerFila
+                FROM Sesiones s
+                INNER JOIN Peliculas p ON s.PeliculaId = p.Id
+                INNER JOIN Salas sal ON s.SalaId = sal.Id
+                WHERE s.Id = @SesionId";
+
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SesionId", sesionId);
+                    
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new Sesion
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                PeliculaId = reader.GetInt32(reader.GetOrdinal("PeliculaId")),
+                                SalaId = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                FechaHora = reader.GetDateTime(reader.GetOrdinal("FechaHora")),
+                                Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                                Activa = reader.GetBoolean(reader.GetOrdinal("Activa")),
+                                Pelicula = new Pelicula
+                                {
+                                    Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                                    ImagenUrl = reader.IsDBNull(reader.GetOrdinal("ImagenUrl")) 
+                                        ? null 
+                                        : reader.GetString(reader.GetOrdinal("ImagenUrl")),
+                                    Duracion = reader.IsDBNull(reader.GetOrdinal("Duracion")) 
+                                        ? null 
+                                        : reader.GetInt32(reader.GetOrdinal("Duracion"))
+                                },
+                                Sala = new Sala
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("SalaId")),
+                                    Nombre = reader.GetString(reader.GetOrdinal("SalaNombre")),
+                                    Filas = reader.GetInt32(reader.GetOrdinal("Filas")),
+                                    ColumnasPerFila = reader.GetInt32(reader.GetOrdinal("ColumnasPerFila"))
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            
+            return null;
         }
     }
 }
