@@ -6,6 +6,238 @@ Esta guía está dividida en **4 partes** para facilitar su lectura y seguimient
 
 ---
 
+## 🚀 Instalación Rápida
+
+¿Quieres instalar y ejecutar el proyecto rápidamente? Esta guía te ayudará a configurar el sistema en menos de 10 minutos.
+
+### 📋 Requisitos Previos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+| Software | Versión Mínima | Descargar |
+|----------|---------------|-----------|
+| Windows | 10/11 | - |
+| .NET SDK | 8.0 | [Descargar](https://dotnet.microsoft.com/download) |
+| MySQL | 8.0 | [Descargar](https://dev.mysql.com/downloads/installer/) |
+| Visual Studio | 2022 | [Descargar](https://visualstudio.microsoft.com/downloads/) |
+| Git | Latest | [Descargar](https://git-scm.com/downloads) |
+
+### 📥 Paso 1: Clonar el Repositorio
+
+```bash
+# Abre PowerShell o Command Prompt
+cd C:\Users\TuUsuario\Desktop
+
+# Clona el repositorio
+git clone https://github.com/nbch0203/App-de-cine.git
+
+# Entra al directorio
+cd App-de-cine\Cine_app
+```
+
+### 🗄️ Paso 2: Configurar la Base de Datos
+
+#### Opción 1: Desde MySQL Workbench (Recomendado)
+1. Abre MySQL Workbench
+2. Conecta a tu servidor local
+3. File > Open SQL Script
+4. Selecciona: `Database/cinema_database_mysql.sql`
+5. Click en el ícono de rayo ⚡ para ejecutar
+
+#### Opción 2: Desde línea de comandos
+```bash
+mysql -u root -p < Database\cinema_database_mysql.sql
+```
+
+#### Verificar la instalación
+```sql
+-- Conecta a MySQL
+mysql -u root -p
+
+-- Usa la base de datos
+USE cinema_db;
+
+-- Verifica las tablas (deberías ver: Usuarios, Peliculas, Salas, Sesiones, Butacas, Reservas, ReservasButacas)
+SHOW TABLES;
+
+-- Verifica datos de prueba (debería retornar 4)
+SELECT COUNT(*) FROM Peliculas;
+```
+
+### ⚙️ Paso 3: Configurar Variables de Entorno
+
+1. En la carpeta raíz del proyecto (`Cine_app/`), crea un archivo llamado `.env`
+2. Agrega el siguiente contenido:
+
+```env
+DATABASE=server=localhost;port=3306;database=cinema_db;user=root;password=tu_password_mysql
+```
+
+**⚠️ IMPORTANTE:** Reemplaza `tu_password_mysql` con tu contraseña real de MySQL.
+
+**Ejemplo:**
+```env
+DATABASE=server=localhost;port=3306;database=cinema_db;user=root;password=MiPassword123
+```
+
+**Verificar ubicación del archivo:**
+```
+Cine_app/
+├── .env          ✅ Correcto
+├── App.xaml
+├── Cine_app.csproj
+```
+
+### 💻 Paso 4: Abrir el Proyecto
+
+**Opción A: Visual Studio (Recomendado)**
+```bash
+# Doble click en el archivo o ejecuta
+start Cine_app.sln
+```
+
+**Opción B: Visual Studio Code**
+```bash
+code .
+```
+
+### 📦 Paso 5: Restaurar Paquetes NuGet
+
+**En Visual Studio:**
+1. Click derecho en "Solution 'Cine_app'"
+2. Seleccionar "Restore NuGet Packages"
+3. Esperar a que termine
+
+**En Terminal:**
+```bash
+dotnet restore
+```
+
+**Paquetes que se instalarán:**
+- MySql.Data (v9.5.0)
+- DotNetEnv (v3.1.1)
+
+### ▶️ Paso 6: Compilar y Ejecutar
+
+**En Visual Studio:**
+1. Presiona **F5** o Click en el botón verde ▶️ "Start"
+2. Espera a que compile
+3. La aplicación debería abrirse automáticamente
+
+**En Terminal:**
+```bash
+# Compilar
+dotnet build
+
+# Ejecutar
+dotnet run
+```
+
+### ✅ Paso 7: Verificar que Todo Funciona
+
+#### Probar la Cartelera
+- ✅ La ventana principal debería mostrar 4 películas
+- ✅ Las imágenes deberían cargar correctamente
+- ✅ Debería aparecer "Bienvenido, Invitado" en la esquina superior
+
+#### Probar el Login
+1. Click en "Iniciar Sesión"
+2. Ingresa:
+   - **Email:** `juan@test.com`
+   - **Password:** `123456`
+3. Click "Iniciar Sesión"
+4. Debería mostrar: "Bienvenido, Juan Pérez"
+
+#### Probar una Reserva Completa
+1. Click en "Ver Horarios" de cualquier película
+2. Selecciona una fecha en el calendario
+3. Click en "Seleccionar" de una sesión
+4. Selecciona 2 butacas
+5. Click "Confirmar Reserva"
+6. Elige método de pago y completa datos de prueba
+7. Click "Pagar"
+8. Deberías ver un mensaje de confirmación con tu código de reserva
+
+### 🔧 Solución de Problemas Comunes
+
+**Error: "No se puede conectar a MySQL"**
+- Verifica que MySQL esté corriendo (Windows: Services → MySQL80 debe estar "Running")
+- Verifica la conexión: `mysql -u root -p`
+- Verifica el archivo `.env` y la contraseña
+
+**Error: "Tabla no existe"**
+```sql
+-- Elimina la BD si existe y vuelve a crearla
+DROP DATABASE IF EXISTS cinema_db;
+source Database/cinema_database_mysql.sql;
+```
+
+**Error: "No se pueden restaurar paquetes NuGet"**
+```bash
+# Limpia caché de NuGet
+dotnet nuget locals all --clear
+
+# Restaura nuevamente
+dotnet restore
+```
+
+**Error: "Archivo .env no encontrado"**
+- Asegúrate de que esté en la raíz del proyecto: `Cine_app/.env`
+- Verifica que NO tenga extensión `.txt`
+
+### 🧪 Datos de Prueba
+
+**Usuario de Prueba:**
+```
+Email: juan@test.com
+Password: 123456
+```
+
+**Películas Disponibles:**
+1. Oppenheimer
+2. Barbie
+3. Spider-Man: Across the Spider-Verse
+4. Guardianes de la Galaxia Vol. 3
+
+**Datos de Pago de Prueba:**
+
+**Tarjeta:**
+```
+Número: 4532015112830366
+Titular: JUAN PEREZ
+Fecha: 12/25
+CVV: 123
+```
+
+**Bizum:**
+```
+Teléfono: 666555444
+```
+
+**PayPal:**
+```
+Email: usuario@gmail.com
+Contraseña: password123
+```
+
+### ✓ Checklist de Instalación
+
+- [ ] ✅ Requisitos previos instalados
+- [ ] ✅ Repositorio clonado
+- [ ] ✅ Base de datos creada y verificada
+- [ ] ✅ Archivo .env configurado
+- [ ] ✅ Proyecto abierto en Visual Studio
+- [ ] ✅ Paquetes NuGet restaurados
+- [ ] ✅ Compilación exitosa (sin errores)
+- [ ] ✅ Aplicación ejecutándose
+- [ ] ✅ Cartelera visible
+- [ ] ✅ Login funcional
+- [ ] ✅ Reserva de prueba completada
+
+**¡Felicitaciones!** Si completaste todos los pasos, la instalación fue exitosa. ⏱️ **Tiempo estimado:** 5-10 minutos
+
+---
+
 ## 📖 Estructura de la Guía
 
 ### 📄 [PARTE 1: Preparación y Fundamentos](Guia%20paso%20a%20paso/GUIA_PASO_A_PASO.md)
@@ -387,6 +619,41 @@ cd App-de-cine
   ```
   Update-Package -reinstall
   ```
+
+---
+
+## 📚 Documentación Adicional
+
+### 📖 Guías Disponibles
+
+| Documento | Descripción | Audiencia |
+|-----------|-------------|-----------|
+| **README.md** (este archivo) | Punto de entrada, instalación rápida, índice general | Todos |
+| **[Guía Paso a Paso (Partes 1-4)](Guia%20paso%20a%20paso/)** | Tutorial completo de desarrollo desde cero | Estudiantes/Desarrolladores |
+| **[Características Avanzadas](Cine_app/Documentacion/CARACTERISTICAS_AVANZADAS.md)** | Detalles técnicos de funcionalidades complejas | Desarrolladores avanzados |
+
+### 🔍 Referencia Rápida Técnica
+
+**Modelos principales:**
+- `Usuario`, `Pelicula`, `Sesion`, `Sala`, `Butaca`, `Reserva`
+
+**Servicios:**
+- `ServicioBaseDeDatos` - Gestión de datos con MySQL
+- `ServicioSesion` - Patrón Singleton para autenticación
+
+**Ventanas/Vistas principales:**
+- `MainWindow` - Contenedor principal con navegación
+- `CarteleraView` - UserControl de cartelera
+- `SeleccionSesionView` - UserControl de horarios
+- `SeleccionButacasWindow` - Modal de selección de butacas con 3D
+- `PagoWindow` - Modal de pago multi-método
+- `PerfilUsuarioWindow` - Modal de gestión de perfil
+
+**Tecnologías:**
+- .NET 8.0+ / WPF
+- MySQL 8.0+
+- MySql.Data 9.5.0
+- DotNetEnv 3.1.1
 
 ---
 
